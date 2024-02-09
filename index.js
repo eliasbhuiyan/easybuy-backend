@@ -1,12 +1,16 @@
 const express = require('express')
 const dbconfig = require('./config/dbconfig')
 const User = require('./modal/userScema')
+const emailValidation = require('./utilities/emailValidation')
+const passwordValidation = require('./utilities/passwordValidation')
+const bcrypt = require('bcrypt');
+require('dotenv').config()
 const app = express()
 app.use(express.json())
 dbconfig()
 // ============================
 
-app.post('/user', function (req, res) {
+app.post('/user', async function (req, res) {
   const {firstName, lastName, phone, email, password, addressOne, addressTwo, zipCode, city, division, district} = req.body
   if(!firstName){
     return res.send({error: 'firstName is required'})
@@ -29,25 +33,40 @@ app.post('/user', function (req, res) {
   if(!district){
     return res.send({error: 'firstName is required'})
   }
-  
-  const user = new User({
-    firstName,
-    lastName,
-    phone,
-    email,
-    password,
-    addressOne,
-    addressTwo,
-    zipCode,
-    city,
-    division,
-    district
-  })
+  if(!email){
+    return res.send({error: 'Email is required'})
+  }
+  if(!emailValidation(email)){
+    return res.send({error: 'Email is invalid'})
+  }
+  if(!password){
+    return res.send({error: 'Password is required'})
+  }
+//   if(!passwordValidation(password)){
+//     return res.send({error: 'Input a strong password'})
+//   }
+  const existingUser = await User.find({email})
 
-  user.save()
-
-  res.send(user)
-
+  if(existingUser.length > 0){
+     return res.send({error: 'Email already in used, please try with another email'})
+  }
+    bcrypt.hash(password, 10, function(err, hash) {
+        const user = new User({
+            firstName,
+            lastName,
+            phone,
+            email,
+            password: hash,
+            addressOne,
+            addressTwo,
+            zipCode,
+            city,
+            division,
+            district
+          })
+          user.save()
+          res.send(user)
+    });
 })
 
 app.listen(8000, ()=>{

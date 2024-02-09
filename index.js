@@ -2,6 +2,8 @@ const express = require('express')
 const dbconfig = require('./config/dbconfig')
 const User = require('./modal/userScema')
 const emailValidation = require('./utilities/emailValidation')
+const emailVerification = require('./utilities/emailVerification')
+const verifyTemplete = require('./utilities/verifyTemplete')
 const passwordValidation = require('./utilities/passwordValidation')
 const bcrypt = require('bcrypt');
 require('dotenv').config()
@@ -50,23 +52,25 @@ app.post('/user', async function (req, res) {
   if(existingUser.length > 0){
      return res.send({error: 'Email already in used, please try with another email'})
   }
-    bcrypt.hash(password, 10, function(err, hash) {
-        const user = new User({
-            firstName,
-            lastName,
-            phone,
-            email,
-            password: hash,
-            addressOne,
-            addressTwo,
-            zipCode,
-            city,
-            division,
-            district
+
+  bcrypt.hash(password, 10, function(err, hash) {
+      const user = new User({
+          firstName,
+          lastName,
+          phone,
+          email,
+          password: hash,
+          addressOne,
+          addressTwo,
+          zipCode,
+          city,
+          division,
+          district
           })
           user.save()
+          emailVerification(user.email, 'Account verification', verifyTemplete())
           res.send(user)
-    });
+        });
 })
 
 app.listen(8000, ()=>{

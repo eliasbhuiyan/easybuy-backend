@@ -1,5 +1,5 @@
-module.exports = function verifyTemplete(){
+module.exports = function verifyTemplete(token){
     return (
-        'Click to verify account <a href="">Click</a>'
+        `Click to verify account <a href="">${token}</a>`
     )
 }

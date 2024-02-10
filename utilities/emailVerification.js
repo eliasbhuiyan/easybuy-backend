@@ -8,7 +8,7 @@ module.exports = async function emailVerification(email, subject, templete){
           pass: process.env.MAIL_PASSWORD,
         },
       });
-
+     
      await transporter.sendMail({
         from: `no reply" ${process.env.MAIL_USERNAME}`,
         to: email,

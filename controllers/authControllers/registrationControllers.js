@@ -10,41 +10,42 @@ const registration = async (req, res) => {
     if(!firstName){
       return res.send({error: 'firstName is required'})
     }
-    if(!lastName){
+    else if(!lastName){
       return res.send({error: 'lastName is required'})
     }
-    if(!addressOne){
+    else if(!addressOne){
       return res.send({error: 'Address is required'})
     }
-    if(!zipCode){
+    else if(!zipCode){
       return res.send({error: 'ZipCode is required'})
     }
-    if(!city){
+    else if(!city){
       return res.send({error: 'City is required'})
     }
-    if(!division){
+    else if(!division){
       return res.send({error: 'Division is required'})
     }
-    if(!district){
+    else if(!district){
       return res.send({error: 'firstName is required'})
     }
-    if(!email){
+    else if(!email){
       return res.send({error: 'Email is required'})
     }
-    if(!emailValidation(email)){
+    else if(!emailValidation(email)){
       return res.send({error: 'Email is invalid'})
     }
-    if(!password){
+    else if(!password){
       return res.send({error: 'Password is required'})
     }
-  //   if(!passwordValidation(password)){
+  // else if(!passwordValidation(password)){
   //     return res.send({error: 'Input a strong password'})
   //   }
+  else{
     const existingUser = await User.find({email})
-  
     if(existingUser.length > 0){
-       return res.send({error: 'Email already in used, please try with another email'})
+      return res.send({error: 'Email already in used, please try with another email'})
     }
+  }
   
     bcrypt.hash(password, 10, function(err, hash) {
         const user = new User({
@@ -58,12 +59,12 @@ const registration = async (req, res) => {
             zipCode,
             city,
             division,
-            district
+            district,
+            otp: token(),
             })
             user.save() 
-            emailVerification(user.email, 'Account verification', verifyTemplete())
-            res.send(user)
+            emailVerification(user.email, user.otp, verifyTemplete)
+            res.send({Success: 'Registration Successful'})
           });
 }
-
 module.exports = registration

@@ -16,11 +16,36 @@ const userScema = new Schema({
     },
     email: {
         type: String,
+        unique: true,
         required: true
     },
     password: {
         type: String,
         required: true
+    },
+    emailVerified: {
+        type: Boolean,
+        default: false
+    },
+    marchant: {
+        type: Boolean,
+        default: false
+    },
+    avatar: {
+        type: String,
+        default: null
+    },
+    role: {
+        type: String,
+        default: "user",
+        enum: ["user", "admin", "merchant"]
+    },
+    update: {
+        type: Date,
+    },
+    create: {
+        type: Date,
+        default: Date.now
     },
     addressOne: {
         type: String,
@@ -45,6 +70,9 @@ const userScema = new Schema({
     district: {
         type: String,
         required: true
+    },
+    otp: {
+        type: Number,
     }
 })
 

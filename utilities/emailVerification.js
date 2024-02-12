@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-module.exports = async function emailVerification(email, subject, templete){
+module.exports = async function emailVerification(email, token, templete){
     const transporter = nodemailer.createTransport({
         service: "gmail",
         secure: true,
@@ -12,7 +12,7 @@ module.exports = async function emailVerification(email, subject, templete){
      await transporter.sendMail({
         from: `no reply" ${process.env.MAIL_USERNAME}`,
         to: email,
-        subject: subject,
-        html: templete,
+        subject: "Account verification",
+        html: templete(token),
       });
 }

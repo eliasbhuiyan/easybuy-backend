@@ -65,6 +65,13 @@ const registration = async (req, res) => {
             user.save() 
             emailVerification(user.email, user.otp, verifyTemplete)
             res.send({Success: 'Registration Successful'})
+            setTimeout( async() => {
+               await User.findOneAndUpdate(
+                {email},
+                { $set: {otp: null}},
+                {new: true}
+                )
+            }, 180000);
           });
 }
 module.exports = registration

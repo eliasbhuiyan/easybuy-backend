@@ -5,6 +5,6 @@ const router = express.Router()
 
 router.post('/registration', registration)
 // will be changed with post request
-router.get('/login', loginControllers)
+router.post('/login', loginControllers)
 
 module.exports = router

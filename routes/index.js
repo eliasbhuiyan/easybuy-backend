@@ -4,6 +4,10 @@ const api = process.env.API
 const apiRoutes = require('./api')
 router.use(api, apiRoutes)
 
+router.get('/', (req, res) => {
+    res.send(`Hey What's up? .This Is Elias API Server`)
+})
+
 router.use(api,(req,res)=>{
     res.send('Not Found')
 })

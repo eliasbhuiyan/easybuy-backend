@@ -5,7 +5,7 @@ const apiRoutes = require('./api')
 router.use(api, apiRoutes)
 
 router.get('/', (req, res) => {
-    res.send(`Hey What's up? .This Is Elias API Server`)
+    res.send(`Hey what's up ? .This Is Elias API Server`)
 })
 
 router.use(api,(req,res)=>{

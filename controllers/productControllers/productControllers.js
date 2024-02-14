@@ -1,4 +1,6 @@
 const User = require("../../modal/userScema")
+const Product = require("../../modal/productSchema")
+const Store = require("../../modal/merchantSchema")
 // =============== ==================== ================
 // =============== Secured Upload Start ================
 // =============== ==================== ================
@@ -34,7 +36,7 @@ async function secureUpload(req, res, next) {
 // =============== ==================== ================
 // =============== Create Product Start ================
 // =============== ==================== ================
-const createProduct = (req, res) => {
+const createProduct = async (req, res) => {
   const { name, description, img, store } = req.body;
   if (!name) {
     return res.send({ error: "Name is required" });
@@ -52,6 +54,10 @@ const createProduct = (req, res) => {
     store,
   });
   product.save();
+  await Store.findOneAndUpdate(
+    { _id: product.store },
+    { $push: { product: product._id } }
+  )
   res.send({ message: "Product created" });
 };
 

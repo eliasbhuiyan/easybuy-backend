@@ -22,10 +22,12 @@ const storeScema = new Schema({
     type: String,
     required: true,
   },
-  product: {
-    type: Schema.Types.ObjectId,
-    ref: "Product",
-  },
+  product: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+    }
+  ],
 });
 
 module.exports = mongoose.model("Store", storeScema);

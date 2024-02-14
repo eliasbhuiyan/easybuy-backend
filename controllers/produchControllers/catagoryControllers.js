@@ -51,8 +51,8 @@ const renderCatagory = async (req, res) => {
 // ================ Render Sub Catagory Start ================
 // ================ ========================= ================
 const renderSubCatagory = async (req, res) => {
-    const catagory = await Catagory.find({}).populate('subCatagory')
-    res.send({catagory})
+    const subCatagory = await SubCatagory.find({}).populate('catagory')
+    res.send({subCatagory})
 }
 
 

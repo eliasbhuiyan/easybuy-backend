@@ -13,10 +13,12 @@ const productScema = new Schema({
         type: String,
         required: true,
     },
-    variant: {
-        type: Schema.Types.ObjectId,
-        ref: "Variant",
-    },
+    variant: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Variant",
+        }
+    ],
     store: {
         type: Schema.Types.ObjectId,
         ref: "Store",

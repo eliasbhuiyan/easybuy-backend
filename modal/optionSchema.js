@@ -13,6 +13,10 @@ const optionSchema = new Schema({
         },
         {
             price: String,
+        },
+        {
+            quantity: String,
+            required: true,
         }
     ],
     variant: {

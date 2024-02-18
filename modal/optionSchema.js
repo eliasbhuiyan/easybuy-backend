@@ -6,28 +6,19 @@ const optionSchema = new Schema({
         type: String,
         required: true,
     },
-    price: {
-        type: String,
-        required: true,
-    },
-    quantity: {
-        type: String,
-        required: true,
-    },
-    image: {
-        type: String,
-        required: true,
-    },
-    product: {
+    value: [
+        {
+            name: String,
+            required: true,
+        },
+        {
+            price: String,
+        }
+    ],
+    variant: {
         type: Schema.Types.ObjectId,
-        ref: "Product",
-    },
-    update: {
-        type: Date,
-    },
-    create: {
-        type: Date,
-    },
+        ref: "Variant",
+    }
 });
 
 module.exports = mongoose.model("Option", optionSchema)

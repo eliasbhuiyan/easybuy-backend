@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const upload = require('../../utilities/multer')
+const upload = require('../../middleware/multer')
 const {
   createProduct, secureUpload, createVariant
 } = require("../../controllers/productControllers/productControllers");

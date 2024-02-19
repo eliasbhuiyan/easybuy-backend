@@ -1,6 +1,7 @@
 const User = require("../../modal/userScema")
 const Product = require("../../modal/productSchema")
-const Store = require("../../modal/merchantSchema")
+const Store = require("../../modal/merchantSchema");
+const Variant = require("../../modal/variantSchema");
 // =============== ==================== ================
 // =============== Secured Upload Start ================
 // =============== ==================== ================
@@ -60,5 +61,27 @@ const createProduct = async (req, res) => {
   )
   res.send({ message: "Product created" });
 };
+// =============== ==================== ================
+// =============== Create Variant Start ================
+// =============== ==================== ================
+const createVariant = async (req, res) => {
+  const { color, image,size,storage, product } = req.body;
+  if (!color || !image || !product) {
+    return res.send({ error: "All fields are required" });
+  }
+  const variant = new Variant({
+    color,
+    image,
+    size,
+    storage,
+    product,
+  })
+  variant.save();
+  await Product.findOneAndUpdate(
+    { _id: variant.product },
+    { $push: { variant: variant._id } }
+  )
+  res.send({ message: "Variant created" });
+}
 
-module.exports = { createProduct, secureUpload };
+module.exports = { createProduct, secureUpload, createVariant };

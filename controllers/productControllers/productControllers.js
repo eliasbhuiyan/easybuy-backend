@@ -65,13 +65,14 @@ const createProduct = async (req, res) => {
 // =============== Create Variant Start ================
 // =============== ==================== ================
 const createVariant = async (req, res) => {
-  const { color, image, size, storage, product } = req.body;
-  if (!color || !image || !product) {
-    return res.send({ error: "All fields are required" });
-  }
+  const { color, price, quantity, size, storage, product } = req.body;
+
+
   const variant = new Variant({
     color,
-    image,
+    image: `${process.env.BASE_URL}/uploads/${req.file.filename}`,
+    price,
+    quantity,
     size,
     storage,
     product,

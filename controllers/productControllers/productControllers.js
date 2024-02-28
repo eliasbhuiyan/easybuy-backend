@@ -66,6 +66,18 @@ const getallproduct = async (req, res) => {
   const product = await Product.find();
   res.send({ product });
 };
+// =============== ====================  ================
+// =============== Delete Product Start ================
+// =============== ====================  ================
+const deleteProduct = async (req, res) => {
+  const { id } = req.body;
+  try {
+    await Product.findOneAndDelete({ _id: id });
+    res.status(200).send({ message: "Product deleted!" });
+  } catch (err) {
+    res.status(500).send({ message: "Failed! Please try again." });
+  }
+}
 // =============== ==================== ================
 // =============== Create Variant Start ================
 // =============== ==================== ================
@@ -89,4 +101,4 @@ const createVariant = async (req, res) => {
   res.send({ message: "Variant created" });
 };
 
-module.exports = { createProduct, secureUpload, createVariant, getallproduct };
+module.exports = { createProduct, secureUpload, createVariant, getallproduct, deleteProduct };

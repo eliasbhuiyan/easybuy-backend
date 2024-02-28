@@ -36,21 +36,21 @@ async function secureUpload(req, res, next) {
 // =============== Create Product Start ================
 // =============== ==================== ================
 const createProduct = async (req, res) => {
-  const { name, description, img, store } = req.body;
+  const { name, description, img, slug } = req.body;
   if (!name) {
     return res.send({ error: "Name is required" });
   } else if (!description) {
     return res.send({ error: "Description is required" });
   } else if (!img) {
     return res.send({ error: "Image is required" });
-  } else if (!store) {
-    return res.send({ error: "Store is required" });
+  } else if (!slug) {
+    return res.send({ error: "Slug is required" });
   }
   const product = new Product({
     name,
     description,
     img,
-    store,
+    slug,
   });
   product.save();
   await Store.findOneAndUpdate(

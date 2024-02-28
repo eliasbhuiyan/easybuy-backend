@@ -1,5 +1,5 @@
-const User = require("../../modal/userScema")
-const Product = require("../../modal/productSchema")
+const User = require("../../modal/userScema");
+const Product = require("../../modal/productSchema");
 const Store = require("../../modal/merchantSchema");
 const Variant = require("../../modal/variantSchema");
 // =============== ==================== ================
@@ -17,7 +17,7 @@ async function secureUpload(req, res, next) {
     if (user.length > 0) {
       if (password == process.env.SWTSECRT) {
         if (user[0].marchant) {
-          return next()
+          return next();
         } else {
           return res.send({ error: "You are not able to upload product" });
         }
@@ -27,11 +27,9 @@ async function secureUpload(req, res, next) {
     } else {
       return res.send({ error: "Authorization Failed" });
     }
-
   } catch {
     return res.send({ error: "Authorization Failed" });
   }
-
 }
 
 // =============== ==================== ================
@@ -58,15 +56,21 @@ const createProduct = async (req, res) => {
   await Store.findOneAndUpdate(
     { _id: product.store },
     { $push: { product: product._id } }
-  )
+  );
   res.send({ message: "Product created" });
+};
+// =============== ====================  ================
+// =============== Get All Product Start ================
+// =============== ====================  ================
+const getallproduct = async (req, res) => {
+  const product = await Product.find();
+  res.send({ product });
 };
 // =============== ==================== ================
 // =============== Create Variant Start ================
 // =============== ==================== ================
 const createVariant = async (req, res) => {
   const { color, price, quantity, size, storage, product } = req.body;
-
 
   const variant = new Variant({
     color,
@@ -76,13 +80,13 @@ const createVariant = async (req, res) => {
     size,
     storage,
     product,
-  })
+  });
   variant.save();
   await Product.findOneAndUpdate(
     { _id: variant.product },
     { $push: { variant: variant._id } }
-  )
+  );
   res.send({ message: "Variant created" });
-}
+};
 
-module.exports = { createProduct, secureUpload, createVariant };
+module.exports = { createProduct, secureUpload, createVariant, getallproduct };

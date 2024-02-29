@@ -27,6 +27,13 @@ const productScema = new Schema({
     type: String,
     required: true,
   },
+  // Ganarate 4 digit Random Id default
+  shortID: {
+    type: String,
+    default: function () {
+      return `#${Math.floor(1000 + Math.random() * 9000)}`;
+    },
+  },
   update: {
     type: Date,
   },

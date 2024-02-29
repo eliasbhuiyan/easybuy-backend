@@ -37,6 +37,7 @@ async function secureUpload(req, res, next) {
 // =============== ==================== ================
 const createProduct = async (req, res) => {
   const { name, description, img,imageAlt, slug } = req.body;
+
   if (!name) {
     return res.status(400).send({ error: "Name is required!" });
   } else if (!description) {
@@ -51,7 +52,7 @@ const createProduct = async (req, res) => {
     const product = new Product({
       name,
       description,
-      img,
+      img: `${process.env.BASE_URL}/uploads/${img}`,
       imageAlt,
       slug,
     });

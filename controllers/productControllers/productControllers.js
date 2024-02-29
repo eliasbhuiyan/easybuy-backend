@@ -7,7 +7,7 @@ const Variant = require("../../modal/variantSchema");
 // =============== ==================== ================
 async function secureUpload(req, res, next) {
   if (!req.headers.authorization) {
-    return res.send({ error: "Authorization Failed" });
+    return res.status(400).send({ error: "Authorization Failed!" });
   }
   const userId = req.headers.authorization.split("@")[1];
   const password = req.headers.authorization.split("@")[2];
@@ -19,16 +19,16 @@ async function secureUpload(req, res, next) {
         if (user[0].marchant) {
           return next();
         } else {
-          return res.send({ error: "You are not able to upload product" });
+          return res.status(400).send({ error: "Authorization Failed!" });
         }
       } else {
-        return res.send({ error: "Authorization Failed" });
+        return res.status(400).send({ error: "Authorization Failed!" });
       }
     } else {
-      return res.send({ error: "Authorization Failed" });
+      return res.status(400).send({ error: "Authorization Failed!" });
     }
   } catch {
-    return res.send({ error: "Authorization Failed" });
+    return res.status(400).send({ error: "Authorization Failed!" });
   }
 }
 
@@ -36,28 +36,32 @@ async function secureUpload(req, res, next) {
 // =============== Create Product Start ================
 // =============== ==================== ================
 const createProduct = async (req, res) => {
-  const { name, description, img, slug } = req.body;
+  const { name, description, img,imageAlt, slug } = req.body;
   if (!name) {
-    return res.send({ error: "Name is required" });
+    return res.status(400).send({ error: "Name is required!" });
   } else if (!description) {
-    return res.send({ error: "Description is required" });
+    return res.status(400).send({ error: "Description is required!" });
   } else if (!img) {
-    return res.send({ error: "Image is required" });
+    return res.status(400).send({ error: "Image is required!" });
+  }else if (!imageAlt) {
+    return res.status(400).send({ error: "Image Alt is required!" });
   } else if (!slug) {
-    return res.send({ error: "Slug is required" });
+    return res.status(400).send({ error: "Slug is required!" });
   }
-  const product = new Product({
-    name,
-    description,
-    img,
-    slug,
-  });
-  product.save();
-  await Store.findOneAndUpdate(
-    { _id: product.store },
-    { $push: { product: product._id } }
-  );
-  res.send({ message: "Product created" });
+    const product = new Product({
+      name,
+      description,
+      img,
+      imageAlt,
+      slug,
+    });
+    product.save();
+    // this store part may delete
+    // await Store.findOneAndUpdate(
+    //   { _id: product.store },
+    //   { $push: { product: product._id } }
+    // );
+    res.status(200).send({ message: "Product created!" });
 };
 // =============== ====================  ================
 // =============== Get All Product Start ================

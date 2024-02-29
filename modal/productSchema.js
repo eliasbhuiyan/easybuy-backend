@@ -13,6 +13,10 @@ const productScema = new Schema({
     type: String,
     required: true,
   },
+  imageAlt: {
+    type: String,
+    required: true,
+  },
   variant: [
     {
       type: Schema.Types.ObjectId,

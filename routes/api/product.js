@@ -8,8 +8,8 @@ const {
   getallproduct,
   deleteProduct
 } = require("../../controllers/productControllers/productControllers");
-
-router.post("/createproduct", secureUpload, createProduct);
+// secureUpload will be added in create product route as a middleware
+router.post("/createproduct",secureUpload, upload.single("image"), createProduct);
 router.post(
   "/createvariant",
   secureUpload,

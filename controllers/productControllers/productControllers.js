@@ -88,10 +88,12 @@ const deleteProduct = async (req, res) => {
 // =============== ==================== ================
 const createVariant = async (req, res) => {
   const { color, price, quantity, size, storage, product } = req.body;
-
+  if(!product){
+    return res.status(400).send({ error: "Product is required!" });
+  }
   const variant = new Variant({
     color,
-    image: `${process.env.BASE_URL}/uploads/${req.file.filename}`,
+    image: `${process.env.BASE_URL}/uploads/${req.file.name}`,
     price,
     quantity,
     size,
@@ -103,7 +105,7 @@ const createVariant = async (req, res) => {
     { _id: variant.product },
     { $push: { variant: variant._id } }
   );
-  res.send({ message: "Variant created" });
+  res.send({ message: "Variant created!" });
 };
 
 module.exports = { createProduct, secureUpload, createVariant, getallproduct, deleteProduct };

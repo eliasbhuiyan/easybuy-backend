@@ -13,7 +13,7 @@ router.post("/createproduct",secureUpload, upload.single("image"), createProduct
 router.post(
   "/createvariant",
   secureUpload,
-  upload.single("image"),
+  // upload.single("image"),
   createVariant
 );
 

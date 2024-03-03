@@ -8,7 +8,7 @@ const variantScema = new Schema({
     },
     image: {
         type: String,
-        required: true,
+        // required: true,
     },
     price: {
         type: String,

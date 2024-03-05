@@ -1,33 +1,17 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const storeScema = new Schema({
-  storeName: {
+const merchantScema = new Schema({
+  email: {
     type: String,
-    required: true,
   },
-  owner: {
+  merchant: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  officialEmail: {
+  password: {
     type: String,
-    required: true,
   },
-  officialPhone: {
-    type: String,
-    required: true,
-  },
-  address: {
-    type: String,
-    required: true,
-  },
-  product: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Product",
-    }
-  ],
 });
 
-module.exports = mongoose.model("Store", storeScema);
+module.exports = mongoose.model("Merchant", merchantScema);

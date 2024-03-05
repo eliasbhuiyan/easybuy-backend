@@ -57,11 +57,6 @@ const createProduct = async (req, res) => {
       slug,
     });
     product.save();
-    // this store part may delete
-    // await Store.findOneAndUpdate(
-    //   { _id: product.store },
-    //   { $push: { product: product._id } }
-    // );
     res.status(200).send({ message: "Product created!" });
 };
 // =============== ====================  ================

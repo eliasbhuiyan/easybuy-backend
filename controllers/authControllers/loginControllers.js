@@ -3,29 +3,30 @@ const bcrypt = require("bcrypt");
 const loginControllers = async (req, res) => {
   const { email, password } = req.body;
   if (!email) {
-    return res.send({ error: "Email is required" });
+    return res.status(400).send({ error: "Email is required" });
   } else if (!password) {
-    return res.send({ error: "Password is required" });
+    return res.status(400).send({ error: "Password is required" });
   } else {
     const existingUser = await User.find({ email });
     if (existingUser.length > 0) {
-      bcrypt.compare(
-        password,
-        existingUser[0].password,
-        function (err, result) {
-          if (result) {
-            return res.send({
-              message: "Login Successfull",
-              user: existingUser[0].firstName + " " + existingUser[0].lastName,
-              email: existingUser[0].email,
-            });
-          } else {
-            return res.send({ error: "Authorization Failed" });
+      // emailVerified check
+      if (!existingUser[0].emailVerified) {
+        return res.status(400).send({ error: "Email is not verified" });
+      } else {
+        bcrypt.compare(
+          password,
+          existingUser[0].password,
+          function (err, result) {
+            if (result) {
+              return res.status(200).send({ message: "Login Successfull!" });
+            } else {
+              return res.status(400).send({ error: "Authorization Failed!" });
+            }
           }
-        }
-      );
+        );
+      }
     } else {
-      return res.send({ error: "Authorization Failed" });
+      return res.status(400).send({ error: "Authorization Failed!" });
     }
   }
 };

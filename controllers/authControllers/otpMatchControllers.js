@@ -1,23 +1,23 @@
 const User = require("../../modal/userScema");
 const otpMatch = async (req, res) => {
-  const { email, otp } = req.body;
+  const { userId, otp } = req.body;
   if (!otp) {
-    return res.send({ error: "OTP is required" });
+    return res.status(400).send({ error: "OTP is required!" });
   } else {
-    const existingUser = await User.find({ email });
+    const existingUser = await User.find({ _id: userId });
     if (existingUser.length > 0) {
-      if (existingUser[0].otp == otp) {
+      if (existingUser[0].otp === otp) {
         await User.findOneAndUpdate(
-          { email },
-          { $set: { otp: null } },
+          { _id: userId },
+          { $set: { otp: null, emailVerified: true } },
           { new: true }
         );
-        return res.send({ message: "OTP verified" });
+        return res.status(200).send({ message: "OTP verified!" });
       } else {
-        return res.send({ error: "Failed" });
+        return res.status(400).send({ error: "Invalid OTP!" });
       }
     } else {
-      return res.send({ error: "Failed" });
+      return res.status(400).send({ error: "User not found!" });
     }
   }
 };

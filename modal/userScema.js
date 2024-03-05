@@ -2,11 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const userScema = new Schema({
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
+  fullName: {
     type: String,
     required: true,
   },
@@ -24,10 +20,6 @@ const userScema = new Schema({
     required: true,
   },
   emailVerified: {
-    type: Boolean,
-    default: false,
-  },
-  marchant: {
     type: Boolean,
     default: false,
   },
@@ -57,22 +49,18 @@ const userScema = new Schema({
   },
   zipCode: {
     type: String,
-    required: true,
   },
   city: {
     type: String,
-    required: true,
   },
   division: {
     type: String,
-    required: true,
   },
   district: {
     type: String,
-    required: true,
   },
   otp: {
-    type: Number,
+    type: String,
   },
 });
 

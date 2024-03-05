@@ -7,8 +7,7 @@ const bcrypt = require("bcrypt");
 const token = require("../../utilities/token");
 const registration = async (req, res) => {
   const {
-    firstName,
-    lastName,
+    fullName,
     phone,
     email,
     password,
@@ -19,26 +18,16 @@ const registration = async (req, res) => {
     division,
     district,
   } = req.body;
-  if (!firstName) {
-    return res.send({ error: "firstName is required" });
-  } else if (!lastName) {
-    return res.send({ error: "lastName is required" });
+  if (!fullName) {
+    return res.status(400).send({ error: "Name is required!" });
   } else if (!addressOne) {
-    return res.send({ error: "Address is required" });
-  } else if (!zipCode) {
-    return res.send({ error: "ZipCode is required" });
-  } else if (!city) {
-    return res.send({ error: "City is required" });
-  } else if (!division) {
-    return res.send({ error: "Division is required" });
-  } else if (!district) {
-    return res.send({ error: "firstName is required" });
+    return res.status(400).send({ error: "Address is required!" });
   } else if (!email) {
-    return res.send({ error: "Email is required" });
+    return res.status(400).send({ error: "Email is required!" });
   } else if (!emailValidation(email)) {
-    return res.send({ error: "Email is invalid" });
+    return res.status(400).send({ error: "Email is invalid!" });
   } else if (!password) {
-    return res.send({ error: "Password is required" });
+    return res.status(400).send({ error: "Password is required!" });
   }
   // else if(!passwordValidation(password)){
   //     return res.send({error: 'Input a strong password'})
@@ -46,7 +35,7 @@ const registration = async (req, res) => {
   else {
     const existingUser = await User.find({ email });
     if (existingUser.length > 0) {
-      return res.send({
+      return res.status(400).send({
         error: "Email already in used, please try with another email",
       });
     }
@@ -54,8 +43,7 @@ const registration = async (req, res) => {
 
   bcrypt.hash(password, 10, function (err, hash) {
     const user = new User({
-      firstName,
-      lastName,
+      fullName,
       phone,
       email,
       password: hash,
@@ -69,7 +57,10 @@ const registration = async (req, res) => {
     });
     user.save();
     emailVerification(user.email, user.otp, verifyTemplete);
-    res.send({ Success: "Registration Successful" });
+    res.status(200).send({
+      success: "Registration Successful!, Check your email for verification",
+      userId: user._id,
+    });
     setTimeout(async () => {
       await User.findOneAndUpdate(
         { email },

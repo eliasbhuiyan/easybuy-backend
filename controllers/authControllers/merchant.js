@@ -67,4 +67,9 @@ const becomeMerchant = async (req, res) => {
 // =============== ==================== ================
 // =============== Get all Merchant Start ================
 // =============== ==================== ================
-module.exports = { becomeMerchant };
+const allMerchant = async (req, res) => {
+  const merchant = await Merchant.find().populate("merchant");
+  res.send({ merchant });
+}
+
+module.exports = { becomeMerchant, allMerchant };

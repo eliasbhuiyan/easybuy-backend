@@ -1,6 +1,9 @@
 const Merchant = require("../../modal/merchantSchema");
 const User = require("../../modal/userScema");
 const bcrypt = require("bcrypt");
+// =============== ==================== ================
+// =============== Become Merchant Start ================
+// =============== ==================== ================
 const becomeMerchant = async (req, res) => {
   const { email, password } =
     req.body;
@@ -36,8 +39,8 @@ const becomeMerchant = async (req, res) => {
                     email: email
                   });
                   merchant.save();                  
+                  res.status(200).send({ message: "Request sent successfully! Wait for approval" });
                 }
-                res.status(200).send({ message: "Request sent successfully! Wait for approval" });
               }
             } else {
               return res.status(400).send({ error: "Authorization Failed!" });
@@ -61,4 +64,7 @@ const becomeMerchant = async (req, res) => {
   // return res.status(200).send({ message: "Request sent successfully! Wait for approval" });
 };
 
+// =============== ==================== ================
+// =============== Get all Merchant Start ================
+// =============== ==================== ================
 module.exports = { becomeMerchant };

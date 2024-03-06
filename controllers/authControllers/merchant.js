@@ -96,7 +96,30 @@ const approvedMerchant = async (req, res) => {
     return res.status(400).send({ error: "Something went wrong!" });
   }
 };
+// =============== ==================== ================
+// =============== Delete Merchant Start ================
+// =============== ==================== ================
+const deleteMerchant = async (req, res) => {
+  const { id } = req.body;
+  try {
+    const merchant = await Merchant.findOneAndDelete({ _id: id })
+    if (merchant) {
+      const merchantId = merchant.merchant;
+      await User.findOneAndUpdate(
+        { _id: merchantId },
+        { $set: { role: "user" } },
+        { new: true }
+      ).then(() => {
+        res.status(200).send({ message: "Merchant Rejected successfully!" });
+      }).catch((err) => {
+        res.status(400).send({ error: "Something went wrong!" });
+      })
+    } else {
+      return res.status(400).send({ error: "Merchant not found!" });
+    }
+  } catch {
+    return res.status(400).send({ error: "Something went wrong!" });
+  }
+}
 
-// =============== ====================
-
-module.exports = { becomeMerchant, allMerchant, approvedMerchant };
+module.exports = { becomeMerchant, allMerchant, approvedMerchant, deleteMerchant };

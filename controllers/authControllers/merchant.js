@@ -25,9 +25,9 @@ const becomeMerchant = async (req, res) => {
           async function (err, result) {
             if (result) {
               // Role Check
-              if(existingUser[0].role === "merchant" || existingUser[0].role === "admin"){
+              if (existingUser[0].role === "merchant" || existingUser[0].role === "admin") {
                 return res.status(400).send({ error: "You are already Authorized! please login" });
-              }else{
+              } else {
                 // Existing Merchant Check
                 const existingMerchant = await Merchant.find({ email: email });
                 if (existingMerchant.length > 0) {
@@ -38,7 +38,7 @@ const becomeMerchant = async (req, res) => {
                     merchant: existingUser[0]._id,
                     email: email
                   });
-                  merchant.save();                  
+                  merchant.save();
                   res.status(200).send({ message: "Request sent successfully! Wait for approval" });
                 }
               }
@@ -48,7 +48,7 @@ const becomeMerchant = async (req, res) => {
           }
         );
       }
-    }else{
+    } else {
       return res.status(400).send({ error: "Don't have an account. Register now." });
     }
   }
@@ -63,7 +63,6 @@ const becomeMerchant = async (req, res) => {
   // );
   // return res.status(200).send({ message: "Request sent successfully! Wait for approval" });
 };
-
 // =============== ==================== ================
 // =============== Get all Merchant Start ================
 // =============== ==================== ================
@@ -71,5 +70,33 @@ const allMerchant = async (req, res) => {
   const merchant = await Merchant.find().populate("merchant");
   res.send({ merchant });
 }
+// =============== ==================== ================
+// =============== Approved Merchant Start ================
+// =============== ==================== ================
+const approvedMerchant = async (req, res) => {
+  const { id } = req.body;
 
-module.exports = { becomeMerchant, allMerchant };
+  try {
+    let merchant = await Merchant.findOne({ _id: id });
+    if (merchant) {
+      const merchantId = merchant.merchant;
+      await User.findOneAndUpdate(
+        { _id: merchantId },
+        { $set: { role: "merchant" } },
+        { new: true }
+      ).then(() => {
+        res.status(200).send({ message: "Merchant approved successfully!" });
+      }).catch((err) => {
+        res.status(400).send({ error: "Something went wrong!" });
+      })
+    } else {
+      return res.status(400).send({ error: "Merchant not found!" });
+    }
+  } catch {
+    return res.status(400).send({ error: "Something went wrong!" });
+  }
+};
+
+// =============== ====================
+
+module.exports = { becomeMerchant, allMerchant, approvedMerchant };

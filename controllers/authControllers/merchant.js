@@ -75,7 +75,6 @@ const allMerchant = async (req, res) => {
 // =============== ==================== ================
 const approvedMerchant = async (req, res) => {
   const { id } = req.body;
-
   try {
     let merchant = await Merchant.findOne({ _id: id });
     if (merchant) {

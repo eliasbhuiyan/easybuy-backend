@@ -1,6 +1,5 @@
 const User = require("../../modal/userScema");
 const Product = require("../../modal/productSchema");
-const Store = require("../../modal/merchantSchema");
 const Variant = require("../../modal/variantSchema");
 // =============== ==================== ================
 // =============== Secured Upload Start ================
@@ -16,7 +15,7 @@ async function secureUpload(req, res, next) {
     let user = await User.find({ _id: userId });
     if (user.length > 0) {
       if (password == process.env.SWTSECRT) {
-        if (user[0].marchant) {
+        if (user[0].role == "admin" || user[0].role == "merchant") {
           return next();
         } else {
           return res.status(400).send({ error: "Authorization Failed!" });
@@ -36,7 +35,7 @@ async function secureUpload(req, res, next) {
 // =============== Create Product Start ================
 // =============== ==================== ================
 const createProduct = async (req, res) => {
-  const { name, description, img,imageAlt, slug } = req.body;
+  const { name, description, img, imageAlt, slug, subCatagory } = req.body;
 
   if (!name) {
     return res.status(400).send({ error: "Name is required!" });
@@ -44,26 +43,29 @@ const createProduct = async (req, res) => {
     return res.status(400).send({ error: "Description is required!" });
   } else if (!img) {
     return res.status(400).send({ error: "Image is required!" });
-  }else if (!imageAlt) {
+  } else if (!imageAlt) {
     return res.status(400).send({ error: "Image Alt is required!" });
   } else if (!slug) {
     return res.status(400).send({ error: "Slug is required!" });
+  } else if (!subCatagory) {
+    return res.status(400).send({ error: "SubCatagory is required!" });
   }
-    const product = new Product({
-      name,
-      description,
-      img: `${process.env.BASE_URL}/uploads/${img}`,
-      imageAlt,
-      slug,
-    });
-    product.save();
-    res.status(200).send({ message: "Product created!" });
+  const product = new Product({
+    name,
+    description,
+    img: `${process.env.BASE_URL}/uploads/${img}`,
+    imageAlt,
+    slug,
+    subCatagory
+  });
+  product.save();
+  res.status(200).send({ message: "Product created!" });
 };
 // =============== ====================  ================
 // =============== Get All Product Start ================
 // =============== ====================  ================
 const getallproduct = async (req, res) => {
-  const product = await Product.find();
+  const product = await Product.find().populate("subCatagory");
   res.send({ product });
 };
 // =============== ====================  ================
@@ -84,9 +86,9 @@ const deleteProduct = async (req, res) => {
 const createVariant = async (req, res) => {
   const { color, price, quantity, size, storage, product } = req.body;
 
-  if(!product){
+  if (!product) {
     return res.status(400).send({ error: "Product ID is required!" });
-  }else{
+  } else {
 
     const variant = new Variant({
       color,

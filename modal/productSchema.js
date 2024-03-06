@@ -17,6 +17,11 @@ const productScema = new Schema({
     type: String,
     required: true,
   },
+  subCatagory: {
+    type: Schema.Types.ObjectId,
+    ref: "SubCatagory",
+    required: true,
+  },
   variant: [
     {
       type: Schema.Types.ObjectId,

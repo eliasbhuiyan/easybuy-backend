@@ -1,6 +1,6 @@
 const User = require("../../modal/userScema");
 const emailValidation = require("../../utilities/emailValidation");
-const emailVerification = require("../../utilities/emailVerification");
+const { emailVerification } = require("../../utilities/sendEmail");
 const verifyTemplete = require("../../utilities/verifyTemplete");
 const passwordValidation = require("../../utilities/passwordValidation");
 const bcrypt = require("bcrypt");

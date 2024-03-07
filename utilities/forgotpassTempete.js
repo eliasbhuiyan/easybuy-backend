@@ -1,4 +1,4 @@
 module.exports = function forgotpassTempete(token) {
-    return `Click to verify account <a href="${process.env.BASE_URL}/forgotpassword?token=${token}">Click</a>`;
+    return `Click to verify account <a href="http://localhost:5173/resetpassword?token=${token}">Click</a>`;
 };
 

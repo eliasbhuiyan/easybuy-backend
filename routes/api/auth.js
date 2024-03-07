@@ -3,7 +3,7 @@ const registration = require("../../controllers/authControllers/registrationCont
 const loginControllers = require("../../controllers/authControllers/loginControllers");
 const otpMatch = require("../../controllers/authControllers/otpMatchControllers");
 const {
-  becomeMerchant, allMerchant, approvedMerchant, deleteMerchant
+  becomeMerchant, allMerchant, approvedMerchant, deleteMerchant, adminControl
 } = require("../../controllers/authControllers/merchant");
 const router = express.Router();
 
@@ -12,7 +12,7 @@ router.post("/login", loginControllers);
 router.post("/otpmatch", otpMatch);
 router.post("/merchant", becomeMerchant);
 router.get("/allmerchant", allMerchant);
-router.post("/approvedmerchant", approvedMerchant);
-router.post("/deletemerchant", deleteMerchant);
+router.post("/approvedmerchant", adminControl, approvedMerchant);
+router.post("/deletemerchant", adminControl, deleteMerchant);
 
 module.exports = router;

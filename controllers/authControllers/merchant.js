@@ -2,6 +2,35 @@ const Merchant = require("../../modal/merchantSchema");
 const User = require("../../modal/userScema");
 const bcrypt = require("bcrypt");
 // =============== ==================== ================
+// =============== Secured Upload Start ================
+// =============== ==================== ================
+async function adminControl(req, res, next) {
+  if (!req.headers.authorization) {
+    return res.status(400).send({ error: "Authorization Failed!" });
+  }
+  const userId = req.headers.authorization.split("@")[1];
+  const password = req.headers.authorization.split("@")[2];
+
+  try {
+    let user = await User.find({ _id: userId });
+    if (user.length > 0) {
+      if (password == process.env.SWTSECRT) {
+        if (user[0].role == "admin") {
+          return next();
+        } else {
+          return res.status(400).send({ error: "Authorization Failed!" });
+        }
+      } else {
+        return res.status(400).send({ error: "Authorization Failed!" });
+      }
+    } else {
+      return res.status(400).send({ error: "Authorization Failed!" });
+    }
+  } catch {
+    return res.status(400).send({ error: "Authorization Failed!" });
+  }
+}
+// =============== ==================== ================
 // =============== Become Merchant Start ================
 // =============== ==================== ================
 const becomeMerchant = async (req, res) => {
@@ -121,4 +150,4 @@ const deleteMerchant = async (req, res) => {
   }
 }
 
-module.exports = { becomeMerchant, allMerchant, approvedMerchant, deleteMerchant };
+module.exports = { becomeMerchant, allMerchant, approvedMerchant, deleteMerchant, adminControl };

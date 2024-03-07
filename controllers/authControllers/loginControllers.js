@@ -18,7 +18,14 @@ const loginControllers = async (req, res) => {
           existingUser[0].password,
           function (err, result) {
             if (result) {
-              return res.status(200).send({ message: "Login Successfull!" });
+              return res.status(200).send({
+                message: "Login Successfull!",
+                user: {
+                  userName: existingUser[0].fullName,
+                  email: existingUser[0].email,
+                  role: existingUser[0].role,
+                },
+              });
             } else {
               return res.status(400).send({ error: "Authorization Failed!" });
             }

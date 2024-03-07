@@ -34,8 +34,7 @@ async function adminControl(req, res, next) {
 // =============== Become Merchant Start ================
 // =============== ==================== ================
 const becomeMerchant = async (req, res) => {
-  const { email, password } =
-    req.body;
+  const { email, password } = req.body;
 
   if (!email || !password) {
     return res.status(400).send({ error: "All fields are required!" });
@@ -54,21 +53,30 @@ const becomeMerchant = async (req, res) => {
           async function (err, result) {
             if (result) {
               // Role Check
-              if (existingUser[0].role === "merchant" || existingUser[0].role === "admin") {
-                return res.status(400).send({ error: "You are already Authorized! please login" });
+              if (
+                existingUser[0].role === "merchant" ||
+                existingUser[0].role === "admin"
+              ) {
+                return res
+                  .status(400)
+                  .send({ error: "You are already Authorized! please login" });
               } else {
                 // Existing Merchant Check
                 const existingMerchant = await Merchant.find({ email: email });
                 if (existingMerchant.length > 0) {
-                  return res.status(200).send({ message: "Request sent successfully! Wait for approval" });
+                  return res.status(200).send({
+                    message: "Request sent successfully! Wait for approval",
+                  });
                 } else {
                   // Create Merchant
                   const merchant = new Merchant({
                     merchant: existingUser[0]._id,
-                    email: email
+                    email: email,
                   });
                   merchant.save();
-                  res.status(200).send({ message: "Request sent successfully! Wait for approval" });
+                  res.status(200).send({
+                    message: "Request sent successfully! Wait for approval",
+                  });
                 }
               }
             } else {
@@ -78,19 +86,11 @@ const becomeMerchant = async (req, res) => {
         );
       }
     } else {
-      return res.status(400).send({ error: "Don't have an account. Register now." });
+      return res
+        .status(400)
+        .send({ error: "Don't have an account. Register now." });
     }
   }
-  // const merchant = new Merchant({
-  //   email,
-  //   password,
-  // });
-  // merchant.save();
-  // await User.findOneAndUpdate(
-  //   { email: officialEmail },
-  //   { $set: { role: "merchant", marchant: true } }
-  // );
-  // return res.status(200).send({ message: "Request sent successfully! Wait for approval" });
 };
 // =============== ==================== ================
 // =============== Get all Merchant Start ================
@@ -98,7 +98,7 @@ const becomeMerchant = async (req, res) => {
 const allMerchant = async (req, res) => {
   const merchant = await Merchant.find().populate("merchant");
   res.send({ merchant });
-}
+};
 // =============== ==================== ================
 // =============== Approved Merchant Start ================
 // =============== ==================== ================
@@ -112,11 +112,13 @@ const approvedMerchant = async (req, res) => {
         { _id: merchantId },
         { $set: { role: "merchant" } },
         { new: true }
-      ).then(() => {
-        res.status(200).send({ message: "Merchant approved successfully!" });
-      }).catch((err) => {
-        res.status(400).send({ error: "Something went wrong!" });
-      })
+      )
+        .then(() => {
+          res.status(200).send({ message: "Merchant approved successfully!" });
+        })
+        .catch((err) => {
+          res.status(400).send({ error: "Something went wrong!" });
+        });
     } else {
       return res.status(400).send({ error: "Merchant not found!" });
     }
@@ -130,24 +132,32 @@ const approvedMerchant = async (req, res) => {
 const deleteMerchant = async (req, res) => {
   const { id } = req.body;
   try {
-    const merchant = await Merchant.findOneAndDelete({ _id: id })
+    const merchant = await Merchant.findOneAndDelete({ _id: id });
     if (merchant) {
       const merchantId = merchant.merchant;
       await User.findOneAndUpdate(
         { _id: merchantId },
-        { $set: { role: "user" } },
+        { $set: { role: "user", sec_token: null } },
         { new: true }
-      ).then(() => {
-        res.status(200).send({ message: "Merchant Rejected successfully!" });
-      }).catch((err) => {
-        res.status(400).send({ error: "Something went wrong!" });
-      })
+      )
+        .then(() => {
+          res.status(200).send({ message: "Merchant Rejected successfully!" });
+        })
+        .catch((err) => {
+          res.status(400).send({ error: "Something went wrong!" });
+        });
     } else {
       return res.status(400).send({ error: "Merchant not found!" });
     }
   } catch {
     return res.status(400).send({ error: "Something went wrong!" });
   }
-}
+};
 
-module.exports = { becomeMerchant, allMerchant, approvedMerchant, deleteMerchant, adminControl };
+module.exports = {
+  becomeMerchant,
+  allMerchant,
+  approvedMerchant,
+  deleteMerchant,
+  adminControl,
+};

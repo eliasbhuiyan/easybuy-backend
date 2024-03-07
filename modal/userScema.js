@@ -62,6 +62,12 @@ const userScema = new Schema({
   otp: {
     type: String,
   },
+  forgotpassToken: {
+    type: String,
+  },
+  sec_token: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("User", userScema);

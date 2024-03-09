@@ -6,9 +6,6 @@ const subCatagoryScema = new Schema({
     type: String,
     required: true,
   },
-  description: {
-    type: String,
-  },
   isActive: {
     type: Boolean,
     default: false,

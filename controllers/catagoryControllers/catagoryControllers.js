@@ -4,11 +4,14 @@ const SubCatagory = require("../../modal/subCatagory.js");
 // ================ Create Catagory Start ================
 // ================ ===================== ================
 const catagory = async (req, res) => {
-  const { name, description } = req.body;
+  const { name } = req.body;
+  if (!name) {
+    return res.status(400).send({ error: "Name is required!" });
+  }
   const existingCatagory = await Catagory.find({ name });
   if (existingCatagory.length > 0) {
-    return res.send({
-      error: "Catagory already in used, please try with another Catagory",
+    return res.status(400).send({
+      error: "Catagory already in used!, please try with another Catagory",
     });
   }
 
@@ -17,22 +20,24 @@ const catagory = async (req, res) => {
     description,
   });
   catagory.save();
-  res.send({ message: "Catagory created" });
+  res.status(200).send({ message: "Catagory created successfully!" });
 };
 
 // ================ ========================= ================
 // ================ Create Sub Catagory Start ================
 // ================ ========================= ================
 const subCatagory = async (req, res) => {
-  const { name, description, catagory } = req.body;
+  const { name, catagory } = req.body;
+  if (!name || !catagory) {
+    return res.status(400).send({ error: "All fields are required" });
+  }
   const existingSubCatagory = await SubCatagory.find({ name });
   if (existingSubCatagory.length > 0) {
-    return res.send({ error: "Sub Catagory already in used !" });
+    return res.status(400).send({ error: "Sub Catagory already in used !" });
   }
 
   const subCatagory = new SubCatagory({
     name,
-    description,
     catagory,
   });
   subCatagory.save();
@@ -40,7 +45,7 @@ const subCatagory = async (req, res) => {
     { _id: subCatagory.catagory },
     { $push: { subCatagory: subCatagory._id } }
   );
-  res.send({ message: "Sub Catagory created" });
+  res.status(200).send({ message: "Sub Catagory created successfully!" });
 };
 
 // ================ ===================== ================

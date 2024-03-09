@@ -6,6 +6,7 @@ const { forgotPassword, resetPassword } = require("../../controllers/authControl
 const {
   becomeMerchant, allMerchant, approvedMerchant, deleteMerchant, adminControl
 } = require("../../controllers/authControllers/merchant");
+const dashbordRole = require("../../middleware/dashbordRole");
 const router = express.Router();
 
 router.post("/registration", registration);
@@ -17,5 +18,9 @@ router.post("/merchant", becomeMerchant);
 router.get("/allmerchant", allMerchant);
 router.post("/approvedmerchant", adminControl, approvedMerchant);
 router.post("/deletemerchant", adminControl, deleteMerchant);
+router.get("/dashbord", dashbordRole, (req, res) => {
+  console.log(req.cookies);
+  res.status(200).send({ success: true });
+});
 
 module.exports = router;

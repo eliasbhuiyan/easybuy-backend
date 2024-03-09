@@ -23,8 +23,12 @@ const loginControllers = async (req, res) => {
                 //===== JWT ROLE TOKEN =====//
                 let token = jwt.sign(
                   {
+                    name: existingUser.fullName,
                     role: existingUser.role,
-                    email: existingUser.email
+                    email: existingUser.email,
+                    phone: existingUser.phone,
+                    address: existingUser.addressOne,
+                    avatar: existingUser.avatar,
                   },
                   process.env.JWT_SEC
                 );
@@ -42,8 +46,8 @@ const loginControllers = async (req, res) => {
                   });
                 return res.status(200).send({
                   message: "Login Successfull!",
-                  role: existingUser.role,
                   sec_token: token,
+                  role: existingUser.role,
                 });
               } else {
                 return res.status(400).send({ error: "Authorization Failed!" });

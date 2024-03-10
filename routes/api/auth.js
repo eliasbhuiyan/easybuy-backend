@@ -18,8 +18,8 @@ router.post("/merchant", becomeMerchant);
 router.get("/allmerchant", allMerchant);
 router.post("/approvedmerchant", adminControl, approvedMerchant);
 router.post("/deletemerchant", adminControl, deleteMerchant);
-router.get("/dashbord", dashbordRole, (req, res) => {
-  console.log(req.cookies);
+router.get("/dashbord", (req, res) => {
+  res.send(req.cookies)
   res.status(200).send({ success: true });
 });
 

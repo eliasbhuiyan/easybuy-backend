@@ -2,6 +2,7 @@ const User = require("../../modal/userScema");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const loginControllers = async (req, res) => {
+
   try {
     const { email, password } = req.body;
     if (!email) {
@@ -41,8 +42,7 @@ const loginControllers = async (req, res) => {
                 );
                 res.cookie("sec_token", token,
                   {
-                    httpOnly: false,
-                    secure: false,
+                    httpOnly: true,
                   });
                 return res.status(200).send({
                   message: "Login Successfull!",

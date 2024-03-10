@@ -21,34 +21,38 @@ const loginControllers = async (req, res) => {
             existingUser.password,
             async function (err, result) {
               if (result) {
-                //===== JWT ROLE TOKEN =====//
-                let token = jwt.sign(
-                  {
-                    name: existingUser.fullName,
+                try {
+                  //===== JWT ROLE TOKEN =====//
+                  let token = jwt.sign(
+                    {
+                      name: existingUser.fullName,
+                      role: existingUser.role,
+                      email: existingUser.email,
+                      phone: existingUser.phone,
+                      address: existingUser.addressOne,
+                      avatar: existingUser.avatar,
+                    },
+                    process.env.JWT_SEC
+                  );
+                  await User.findByIdAndUpdate(
+                    existingUser._id,
+                    {
+                      $set: { sec_token: token },
+                    },
+                    { new: true }
+                  );
+                  // res.cookie("sec_token", token,
+                  //   {
+                  //     httpOnly: true,
+                  //   });
+                  return res.status(200).send({
+                    message: "Login Successfull!",
+                    sec_token: token,
                     role: existingUser.role,
-                    email: existingUser.email,
-                    phone: existingUser.phone,
-                    address: existingUser.addressOne,
-                    avatar: existingUser.avatar,
-                  },
-                  process.env.JWT_SEC
-                );
-                await User.findByIdAndUpdate(
-                  existingUser._id,
-                  {
-                    $set: { sec_token: token },
-                  },
-                  { new: true }
-                );
-                res.cookie("sec_token", token,
-                  {
-                    httpOnly: true,
                   });
-                return res.status(200).send({
-                  message: "Login Successfull!",
-                  sec_token: token,
-                  role: existingUser.role,
-                });
+                } catch (error) {
+                  return res.status(400).send({ error: "Internal Server Error!" });
+                }
               } else {
                 return res.status(400).send({ error: "Authorization Failed!" });
               }

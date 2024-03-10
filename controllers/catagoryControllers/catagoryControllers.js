@@ -17,7 +17,6 @@ const catagory = async (req, res) => {
 
   const catagory = new Catagory({
     name,
-    description,
   });
   catagory.save();
   res.status(200).send({ message: "Catagory created successfully!" });

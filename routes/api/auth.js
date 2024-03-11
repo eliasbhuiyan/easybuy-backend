@@ -4,9 +4,10 @@ const loginControllers = require("../../controllers/authControllers/loginControl
 const otpMatch = require("../../controllers/authControllers/otpMatchControllers");
 const { forgotPassword, resetPassword } = require("../../controllers/authControllers/forgotPassword");
 const {
-  becomeMerchant, allMerchant, approvedMerchant, deleteMerchant, adminControl
+  becomeMerchant, allMerchant, approvedMerchant, deleteMerchant
 } = require("../../controllers/authControllers/merchant");
 const dashbordRole = require("../../middleware/dashbordRole");
+const adminControl = require("../../middleware/adminControl");
 const router = express.Router();
 
 router.post("/registration", registration);

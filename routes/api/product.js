@@ -3,22 +3,29 @@ const router = express.Router();
 const upload = require("../../middleware/multer");
 const {
   createProduct,
-  secureUpload,
   createVariant,
   getallproduct,
-  deleteProduct
+  deleteProduct,
+  approvedProduct
 } = require("../../controllers/productControllers/productControllers");
+const adminMerchantControl = require("../../middleware/adminMerchantControl");
+const adminControl = require("../../middleware/adminControl");
 // secureUpload will be added in create product route as a middleware
-router.post("/createproduct",secureUpload, upload.single("image"), createProduct);
+router.post("/createproduct", adminMerchantControl, upload.single("image"), createProduct);
 router.post(
   "/createvariant",
-  secureUpload,
+  adminMerchantControl,
   // upload.single("image"),
   createVariant
+);
+router.post(
+  "/approvedproduct",
+  adminControl,
+  approvedProduct
 );
 
 router.get("/getallproduct", getallproduct);
 
-router.post("/deleteproduct", deleteProduct);
+router.post("/deleteproduct", adminControl, deleteProduct);
 
 module.exports = router;

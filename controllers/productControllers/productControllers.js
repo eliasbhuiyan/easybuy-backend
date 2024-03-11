@@ -1,35 +1,5 @@
-const User = require("../../modal/userScema");
 const Product = require("../../modal/productSchema");
 const Variant = require("../../modal/variantSchema");
-// =============== ==================== ================
-// =============== Secured Upload Start ================
-// =============== ==================== ================
-async function secureUpload(req, res, next) {
-  if (!req.headers.authorization) {
-    return res.status(400).send({ error: "Authorization Failed!" });
-  }
-  const userId = req.headers.authorization.split("@")[1];
-  const password = req.headers.authorization.split("@")[2];
-
-  try {
-    let user = await User.find({ _id: userId });
-    if (user.length > 0) {
-      if (password == process.env.SWTSECRT) {
-        if (user[0].role == "admin" || user[0].role == "merchant") {
-          return next();
-        } else {
-          return res.status(400).send({ error: "Authorization Failed!" });
-        }
-      } else {
-        return res.status(400).send({ error: "Authorization Failed!" });
-      }
-    } else {
-      return res.status(400).send({ error: "Authorization Failed!" });
-    }
-  } catch {
-    return res.status(400).send({ error: "Authorization Failed!" });
-  }
-}
 
 // =============== ==================== ================
 // =============== Create Product Start ================
@@ -61,6 +31,29 @@ const createProduct = async (req, res) => {
   product.save();
   res.status(200).send({ message: "Product created!" });
 };
+// =============== ====================  ================
+// =============== Approved Product Start ================
+// =============== ====================  ================
+const approvedProduct = async (req, res) => {
+  const { id } = req.body;
+  try {
+    const productStatus = await Product.findOne({ _id: id });
+    if (!productStatus) {
+      return res.status(400).send({ error: "Product not found!" });
+    }
+    else if (productStatus.status === "approved") {
+      await Product.findByIdAndUpdate(productStatus._id, { status: "pending" });
+      return res.status(201).send({ message: "Product pending!" });
+    }
+    else if (productStatus.status === "pending") {
+      await Product.findByIdAndUpdate(id, { status: "approved" });
+      return res.status(200).send({ message: "Product Approved Successfully!" });
+    }
+  } catch (err) {
+    res.status(500).send({ error: "Failed! Please try again." });
+  }
+}
+
 // =============== ====================  ================
 // =============== Get All Product Start ================
 // =============== ====================  ================
@@ -109,4 +102,4 @@ const createVariant = async (req, res) => {
 
 };
 
-module.exports = { createProduct, secureUpload, createVariant, getallproduct, deleteProduct };
+module.exports = { createProduct, createVariant, getallproduct, deleteProduct, approvedProduct };

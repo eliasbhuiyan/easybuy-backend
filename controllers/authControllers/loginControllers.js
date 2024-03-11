@@ -22,16 +22,18 @@ const loginControllers = async (req, res) => {
             async function (err, result) {
               if (result) {
                 try {
+                  const userObject = {
+                    auth: existingUser._id,
+                    name: existingUser.fullName,
+                    role: existingUser.role,
+                    email: existingUser.email,
+                    phone: existingUser.phone,
+                    address: existingUser.addressOne,
+                    avatar: existingUser.avatar,
+                  }
                   //===== JWT ROLE TOKEN =====//
                   let token = jwt.sign(
-                    {
-                      name: existingUser.fullName,
-                      role: existingUser.role,
-                      email: existingUser.email,
-                      phone: existingUser.phone,
-                      address: existingUser.addressOne,
-                      avatar: existingUser.avatar,
-                    },
+                    userObject,
                     process.env.JWT_SEC
                   );
                   await User.findByIdAndUpdate(
@@ -48,7 +50,7 @@ const loginControllers = async (req, res) => {
                   return res.status(200).send({
                     message: "Login Successfull!",
                     sec_token: token,
-                    role: existingUser.role,
+                    userObject
                   });
                 } catch (error) {
                   return res.status(400).send({ error: "Internal Server Error!" });

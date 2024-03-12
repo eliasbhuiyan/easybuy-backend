@@ -6,14 +6,24 @@ const catagoryScema = new Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    default: "Empty Description ...",
+  },
   subCatagory: [
     {
       type: Schema.Types.ObjectId,
       ref: "SubCatagory",
     },
   ],
+  status: {
+    type: String,
+    default: "waiting",
+    enum: ["waiting", "published"],
+  },
   update: {
     type: Date,
+    default: Date.now,
   },
   create: {
     type: Date,

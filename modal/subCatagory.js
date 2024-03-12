@@ -6,14 +6,9 @@ const subCatagoryScema = new Schema({
     type: String,
     required: true,
   },
-  isActive: {
-    type: Boolean,
-    default: false,
-  },
-  status: {
+  description: {
     type: String,
-    default: "waiting",
-    enum: ["waiting", "approved", "rejected"],
+    default: "Empty Description ...",
   },
   catagory: {
     type: Schema.Types.ObjectId,

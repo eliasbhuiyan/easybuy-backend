@@ -16,16 +16,16 @@ async function adminMerchantControl(req, res, next) {
                 if (user[0].role == "admin" || user[0].role == "merchant") {
                     return next();
                 } else {
-                    return res.status(400).send({ error: "Authorization Failed!" });
+                    return res.status(400).send({ error: "Not Found Data!" });
                 }
             } else {
                 return res.status(400).send({ error: "Authorization Failed!" });
             }
         } else {
-            return res.status(400).send({ error: "Authorization Failed!" });
+            return res.status(400).send({ error: "Not Found Data!" });
         }
     } catch {
-        return res.status(400).send({ error: "Authorization Failed!" });
+        return res.status(400).send({ error: "Not Found Data!" });
     }
 }
 

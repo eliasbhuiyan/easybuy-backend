@@ -24,7 +24,7 @@ router.post(
   approvedProduct
 );
 
-router.get("/getallproduct", getallproduct);
+router.get("/getallproduct", adminMerchantControl, getallproduct);
 
 router.post("/deleteproduct", adminControl, deleteProduct);
 

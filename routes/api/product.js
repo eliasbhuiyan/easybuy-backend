@@ -10,12 +10,12 @@ const {
 } = require("../../controllers/productControllers/productControllers");
 const adminMerchantControl = require("../../middleware/adminMerchantControl");
 const adminControl = require("../../middleware/adminControl");
-// secureUpload will be added in create product route as a middleware
+
 router.post("/createproduct", adminMerchantControl, upload.single("image"), createProduct);
 router.post(
   "/createvariant",
   adminMerchantControl,
-  // upload.single("image"),
+  upload.single("image"),
   createVariant
 );
 router.post(

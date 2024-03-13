@@ -5,13 +5,12 @@ const Variant = require("../../modal/variantSchema");
 // =============== Create Product Start ================
 // =============== ==================== ================
 const createProduct = async (req, res) => {
-  const { name, description, img, imageAlt, slug, subCatagory } = req.body;
-
+  const { name, description, imageAlt, slug, subCatagory } = req.body;
   if (!name) {
     return res.status(400).send({ error: "Name is required!" });
   } else if (!description) {
     return res.status(400).send({ error: "Description is required!" });
-  } else if (!img) {
+  } else if (!req.file) {
     return res.status(400).send({ error: "Image is required!" });
   } else if (!imageAlt) {
     return res.status(400).send({ error: "Image Alt is required!" });
@@ -23,7 +22,7 @@ const createProduct = async (req, res) => {
   const product = new Product({
     name,
     description,
-    img: `${process.env.BASE_URL}/uploads/${img}`,
+    image: `${process.env.BASE_URL}/uploads/${req.file.filename}`,
     imageAlt,
     slug,
     subCatagory

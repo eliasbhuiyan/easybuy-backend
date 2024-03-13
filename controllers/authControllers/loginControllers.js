@@ -2,7 +2,6 @@ const User = require("../../modal/userScema");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const loginControllers = async (req, res) => {
-
   try {
     const { email, password } = req.body;
     if (!email) {

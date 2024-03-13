@@ -59,6 +59,10 @@ const userScema = new Schema({
   district: {
     type: String,
   },
+  totalOrder: {
+    type: Number,
+    default: 0,
+  },
   otp: {
     type: String,
   },

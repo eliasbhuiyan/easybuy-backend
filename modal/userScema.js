@@ -53,10 +53,10 @@ const userScema = new Schema({
   city: {
     type: String,
   },
-  division: {
+  country: {
     type: String,
   },
-  district: {
+  state: {
     type: String,
   },
   totalOrder: {

@@ -51,8 +51,8 @@ const registration = async (req, res) => {
       addressTwo,
       zipCode,
       city,
-      division,
-      district,
+      country,
+      state,
       otp: token(),
     });
     user.save();

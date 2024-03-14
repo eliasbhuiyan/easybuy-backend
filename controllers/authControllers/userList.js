@@ -4,7 +4,7 @@ const User = require("../../modal/userScema");
 // =============== =============== ================
 
 const userList = async (req, res) => {
-    const user = await User.find({}, 'fullName email avatar create phone addressOne totalOrder',);
+    const user = await User.find({ role: "user" }, 'fullName email avatar create phone addressOne totalOrder',);
     res.send({ user });
 }
 

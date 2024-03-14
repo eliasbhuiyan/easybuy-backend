@@ -20,24 +20,26 @@ const createProduct = async (req, res) => {
     return res.status(400).send({ error: "SubCatagory is required!" });
   }
 
-  ImageUpload(req.file.path, (error, result) => {
-    if (result) {
-      const product = new Product({
-        name,
-        description,
-        image: result.url,
-        imageAlt,
-        slug,
-        subCatagory
-      });
-      product.save();
-      return res.status(200).send({ message: "Product created!" });
-    } else {
-      return res.status(400).send({ error: "Something is wrong! Try again." });
-    }
-  });
-
-
+  try {
+    ImageUpload(req.file.path, (error, result) => {
+      if (result) {
+        const product = new Product({
+          name,
+          description,
+          image: result.url,
+          imageAlt,
+          slug,
+          subCatagory
+        });
+        product.save();
+        return res.status(200).send({ message: "Product created!" });
+      } else {
+        return res.status(400).send({ error: "Something is wrong! Try again." });
+      }
+    });
+  } catch (error) {
+    return res.status(400).send({ error: "Something is wrong! Try again." });
+  }
 };
 // =============== ====================  ================
 // =============== Approved Product Start ================
@@ -86,28 +88,34 @@ const deleteProduct = async (req, res) => {
 // =============== ==================== ================
 const createVariant = async (req, res) => {
   const { color, price, quantity, size, storage, product } = req.body;
-
   if (!product) {
     return res.status(400).send({ error: "Product ID is required!" });
-  } else {
-
-    const variant = new Variant({
-      color,
-      // image: `${process.env.BASE_URL}/uploads/${req.file.name}`,
-      price,
-      quantity,
-      size,
-      storage,
-      product,
-    });
-    variant.save();
-    await Product.findOneAndUpdate(
-      { _id: variant.product },
-      { $push: { variant: variant._id } }
-    );
-    res.send({ message: "Variant created!" });
   }
-
+  try {
+    ImageUpload(req.file.path, async (error, result) => {
+      if (result) {
+        const variant = new Variant({
+          color,
+          image: result.url,
+          price,
+          quantity,
+          size,
+          storage,
+          product,
+        });
+        variant.save();
+        await Product.findOneAndUpdate(
+          { _id: variant.product },
+          { $push: { variant: variant._id } }
+        );
+        res.send({ message: "Variant created!" });
+      } else {
+        return res.status(400).send({ error: "Something is wrong! Try again." });
+      }
+    });
+  } catch (error) {
+    return res.status(400).send({ error: "Something is wrong! Try again." });
+  }
 };
 
 module.exports = { createProduct, createVariant, getallproduct, deleteProduct, approvedProduct };

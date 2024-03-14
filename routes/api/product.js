@@ -11,6 +11,7 @@ const {
 const adminMerchantControl = require("../../middleware/adminMerchantControl");
 const adminControl = require("../../middleware/adminControl");
 
+
 router.post("/createproduct", adminMerchantControl, upload.single("image"), createProduct);
 router.post(
   "/createvariant",

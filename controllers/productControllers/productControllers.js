@@ -1,6 +1,6 @@
 const Product = require("../../modal/productSchema");
 const Variant = require("../../modal/variantSchema");
-
+const ImageUpload = require("../../utilities/cloudinary")
 // =============== ==================== ================
 // =============== Create Product Start ================
 // =============== ==================== ================
@@ -19,16 +19,25 @@ const createProduct = async (req, res) => {
   } else if (!subCatagory) {
     return res.status(400).send({ error: "SubCatagory is required!" });
   }
-  const product = new Product({
-    name,
-    description,
-    image: `${process.env.BASE_URL}/uploads/${req.file.filename}`,
-    imageAlt,
-    slug,
-    subCatagory
+
+  ImageUpload(req.file.path, (error, result) => {
+    if (result) {
+      const product = new Product({
+        name,
+        description,
+        image: result.url,
+        imageAlt,
+        slug,
+        subCatagory
+      });
+      product.save();
+      return res.status(200).send({ message: "Product created!" });
+    } else {
+      return res.status(400).send({ error: "Something is wrong! Try again." });
+    }
   });
-  product.save();
-  res.status(200).send({ message: "Product created!" });
+
+
 };
 // =============== ====================  ================
 // =============== Approved Product Start ================

@@ -44,6 +44,12 @@ const productScema = new Schema({
     default: "pending",
     enum: ["pending", "approved",],
   },
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Review",
+    },
+  ],
   update: {
     type: Date,
   },

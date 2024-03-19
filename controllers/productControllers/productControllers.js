@@ -72,6 +72,14 @@ const getallproduct = async (req, res) => {
   res.send({ product });
 };
 // =============== ====================  ================
+// =============== Find One Product Start ================
+// =============== ====================  ================
+const findOneProduct = async (req, res) => {
+  const { id } = req.body
+  const product = await Product.findOne({ shortID: id }).populate("variant")
+  res.send({ product });
+};
+// =============== ====================  ================
 // =============== Delete Product Start ================
 // =============== ====================  ================
 const deleteProduct = async (req, res) => {
@@ -118,4 +126,4 @@ const createVariant = async (req, res) => {
   }
 };
 
-module.exports = { createProduct, createVariant, getallproduct, deleteProduct, approvedProduct };
+module.exports = { createProduct, createVariant, getallproduct, deleteProduct, approvedProduct, findOneProduct };

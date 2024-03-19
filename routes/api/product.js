@@ -6,7 +6,8 @@ const {
   createVariant,
   getallproduct,
   deleteProduct,
-  approvedProduct
+  approvedProduct,
+  findOneProduct
 } = require("../../controllers/productControllers/productControllers");
 const adminMerchantControl = require("../../middleware/adminMerchantControl");
 const adminControl = require("../../middleware/adminControl");
@@ -26,6 +27,7 @@ router.post(
 );
 
 router.get("/getallproduct", adminMerchantControl, getallproduct);
+router.post("/findoneproduct", adminMerchantControl, findOneProduct);
 
 router.post("/deleteproduct", adminControl, deleteProduct);
 

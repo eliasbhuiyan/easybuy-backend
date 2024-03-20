@@ -1,5 +1,6 @@
 const Product = require("../../modal/productSchema");
 const Variant = require("../../modal/variantSchema");
+const User = require("../../modal/userScema");
 const ImageUpload = require("../../utilities/cloudinary")
 // =============== ==================== ================
 // =============== Create Product Start ================
@@ -125,5 +126,47 @@ const createVariant = async (req, res) => {
     return res.status(400).send({ error: "Something is wrong! Try again." });
   }
 };
+// =============== ==================== ================
+// =============== Review Product Start ================
+// =============== ==================== ================
+const review = async (req, res) => {
+  const { email, rating, comment, shortID } = req.body;
+  if (!email) {
+    return res.status(400).send({ error: "Email is required!" });
+  }
+  if (!rating) {
+    return res.status(400).send({ error: "Give your rating!" });
+  }
+  if (!shortID) {
+    return res.status(400).send({ error: "Somthing is wrong!" });
+  }
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).send({ error: "User not found!" });
 
-module.exports = { createProduct, createVariant, getallproduct, deleteProduct, approvedProduct, findOneProduct };
+    }
+    const product = await Product.findOne({ shortID });
+    const review = {
+      userId: user._id,
+      rating,
+      comment,
+    };
+    product.reviews.push(review);
+    product.save();
+    res.send({ message: "Review created!" });
+    // if (result) {
+    //   await Product.findOneAndUpdate(
+    //     { _id: variant.product },
+    //     { $push: { variant: variant._id } }
+    //   );
+    //   res.send({ message: "Variant created!" });
+    // } else {
+    //   return res.status(400).send({ error: "Something is wrong! Try again." });
+    // }
+  } catch (error) {
+    return res.status(400).send({ error: "Something is wrong! Try again." });
+  }
+};
+
+module.exports = { createProduct, createVariant, getallproduct, deleteProduct, approvedProduct, findOneProduct, review };

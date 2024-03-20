@@ -7,7 +7,8 @@ const {
   getallproduct,
   deleteProduct,
   approvedProduct,
-  findOneProduct
+  findOneProduct,
+  review
 } = require("../../controllers/productControllers/productControllers");
 const adminMerchantControl = require("../../middleware/adminMerchantControl");
 const adminControl = require("../../middleware/adminControl");
@@ -26,9 +27,10 @@ router.post(
   approvedProduct
 );
 
-router.get("/getallproduct", adminMerchantControl, getallproduct);
-router.post("/findoneproduct", adminMerchantControl, findOneProduct);
+router.get("/getallproduct", getallproduct);
+router.post("/findoneproduct", findOneProduct);
 
 router.post("/deleteproduct", adminControl, deleteProduct);
+router.post("/review", review);
 
 module.exports = router;

@@ -64,7 +64,6 @@ const approvedProduct = async (req, res) => {
     res.status(500).send({ error: "Failed! Please try again." });
   }
 }
-
 // =============== ====================  ================
 // =============== Get All Product Start ================
 // =============== ====================  ================

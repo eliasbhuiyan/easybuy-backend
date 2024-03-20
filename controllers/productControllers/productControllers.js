@@ -78,6 +78,12 @@ const getallproduct = async (req, res) => {
 const findOneProduct = async (req, res) => {
   const { id } = req.body
   const product = await Product.findOne({ shortID: id }).populate("variant")
+    .populate("reviews")
+    .populate({
+      path: "reviews.userId",
+      model: "User",
+      select: "fullName email avatar",
+    });
   res.send({ product });
 };
 // =============== ====================  ================

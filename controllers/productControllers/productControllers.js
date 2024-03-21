@@ -1,5 +1,6 @@
 const Product = require("../../modal/productSchema");
 const Variant = require("../../modal/variantSchema");
+const SubCatagory = require("../../modal/subCatagory");
 const User = require("../../modal/userScema");
 const ImageUpload = require("../../utilities/cloudinary")
 // =============== ==================== ================
@@ -22,7 +23,7 @@ const createProduct = async (req, res) => {
   }
 
   try {
-    ImageUpload(req.file.path, (error, result) => {
+    ImageUpload(req.file.path, async (error, result) => {
       if (result) {
         const product = new Product({
           name,
@@ -33,6 +34,10 @@ const createProduct = async (req, res) => {
           subCatagory
         });
         product.save();
+        await SubCatagory.findOneAndUpdate(
+          { _id: subCatagory },
+          { $push: { product: product._id } }
+        )
         return res.status(200).send({ message: "Product created!" });
       } else {
         return res.status(400).send({ error: "Something is wrong! Try again." });

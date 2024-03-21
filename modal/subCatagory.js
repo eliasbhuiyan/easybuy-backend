@@ -14,6 +14,12 @@ const subCatagoryScema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Catagory",
   },
+  product: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+    },
+  ],
   update: {
     type: Date,
   },

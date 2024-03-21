@@ -71,7 +71,10 @@ const renderCatagory = async (req, res) => {
 const CatagoryById = async (req, res) => {
   const { id } = req.body;
   try {
-    const catagory = await Catagory.findOne({ _id: id }).populate("subCatagory");
+    const catagory = await Catagory.findOne({ _id: id }).populate("subCatagory").populate({
+      path: "subCatagory.product",
+      model: "Product",
+    });
     if (!catagory) {
       return res.status(400).send({ error: "No such Catagory found!" });
     }
@@ -85,7 +88,7 @@ const CatagoryById = async (req, res) => {
 // ================ Render Sub Catagory Start ================
 // ================ ========================= ================
 const renderSubCatagory = async (req, res) => {
-  const subCatagory = await SubCatagory.find({}).populate("catagory");
+  const subCatagory = await SubCatagory.find({}).populate("catagory").populate("product");
   res.send({ subCatagory });
 };
 // ================ ===================== ================

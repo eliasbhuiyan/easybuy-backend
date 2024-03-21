@@ -6,8 +6,10 @@ const { forgotPassword, resetPassword } = require("../../controllers/authControl
 const {
   becomeMerchant, allMerchant, approvedMerchant, deleteMerchant
 } = require("../../controllers/authControllers/merchant");
+const upload = require("../../middleware/multer");
 const adminControl = require("../../middleware/adminControl");
 const adminMerchantControl = require("../../middleware/adminMerchantControl");
+const userControl = require("../../middleware/userControl");
 const { userList, FindUser, UpdateUser } = require("../../controllers/authControllers/userList");
 const router = express.Router();
 
@@ -15,7 +17,7 @@ router.post("/registration", registration);
 router.post("/login", loginControllers);
 router.get("/userlist", adminMerchantControl, userList);
 router.post("/finduser", adminMerchantControl, FindUser);
-router.post("/updateuser", UpdateUser);
+router.post("/updateuser", upload.single("image"), userControl, UpdateUser);
 router.post("/forgotpassword", forgotPassword);
 router.post("/resetpassword", resetPassword);
 router.post("/otpmatch", otpMatch);

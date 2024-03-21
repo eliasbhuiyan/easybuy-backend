@@ -1,6 +1,7 @@
 const User = require("../../modal/userScema");
 const jwt = require("jsonwebtoken");
 const emailValidation = require("../../utilities/emailValidation");
+const ImageUpload = require("../../utilities/cloudinary")
 // =============== =============== ================
 // =============== User Lisr Start ================
 // =============== =============== ================
@@ -61,32 +62,13 @@ const UpdateUser = async (req, res) => {
             return res.status(400).send({ error: "Email is invalid!" });
         }
         const existingUser = await User.findOne({ _id: uid });
-
         if(!existingUser){
             return res.status(400).send({error: "Something went wrong!"})
         }
-        const userObject = {
-            auth: existingUser._id,
-            name: existingUser.fullName,
-            role: existingUser.role,
-            email: existingUser.email,
-            phone: existingUser.phone,
-            address: existingUser.addressOne,
-            addressTwo: existingUser.addressTwo,
-            avatar: existingUser.avatar,
-            city: existingUser.city,
-            country: existingUser.country,
-            state: existingUser.state,
-            zipCode: existingUser.zipCode
-          }
-        const expiresIn = 10 * 24 * 60 * 60;
-        let token = jwt.sign(
-            userObject,
-            process.env.JWT_SEC,
-            { expiresIn }
-          );
-          await User.findOneAndUpdate({ _id: uid }, {
+        ImageUpload(req.file.path, async (error, result) => {
+         const updatedUser = await User.findOneAndUpdate({ _id: uid }, {
             $set: {
+                "avatar": result.url,
                 "fullName": fullName,
                 "phone": phone,
                 "email": email,
@@ -96,16 +78,37 @@ const UpdateUser = async (req, res) => {
                 "city": city,
                 "country": country,
                 "state": state,
-                "sec_token": token,
                 "update": Date.now()
             }
-        }, { new: true })
+         }, { new: true })
+         const userObject = {
+            auth: updatedUser._id,
+            name: updatedUser.fullName,
+            role: updatedUser.role,
+            email: updatedUser.email,
+            phone: updatedUser.phone,
+            address: updatedUser.addressOne,
+            addressTwo: updatedUser.addressTwo,
+            avatar: updatedUser.avatar,
+            city: updatedUser.city,
+            country: updatedUser.country,
+            state: updatedUser.state,
+            zipCode: updatedUser.zipCode
+        }
+        const expiresIn = 10 * 24 * 60 * 60;
+        let token = jwt.sign(
+            userObject,
+            process.env.JWT_SEC,
+            { expiresIn }
+          );
         return res.status(200).json({
          message: 'User Updated Successfully!',
+         sec_token: token,
+         userObject
         })
-
+        })
     } catch (err) {
-        return res.status(500).json({ message: 'Internal Server Error!' })
+        return res.status(400).send({ error: 'Internal Server Error!' })
     }
 };
 

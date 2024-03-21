@@ -64,6 +64,22 @@ const renderCatagory = async (req, res) => {
   const catagory = await Catagory.find({}).populate("subCatagory");
   res.send({ catagory });
 };
+// ================ ===================== ================
+// ================ Catagory By ID Start ================
+// ================ ===================== ================
+
+const CatagoryById = async (req, res) => {
+  const { id } = req.body;
+  try {
+    const catagory = await Catagory.findOne({ _id: id }).populate("subCatagory");
+    if (!catagory) {
+      return res.status(400).send({ error: "No such Catagory found!" });
+    }
+    res.send({ catagory });
+  } catch (error) {
+    return res.status(400).send({ error: "Something went wrong!" });
+  }
+};
 
 // ================ ========================= ================
 // ================ Render Sub Catagory Start ================
@@ -113,4 +129,4 @@ const updateStatus = async (req, res) => {
     res.status(500).send({ error: "Failed! Please try again." });
   }
 }
-module.exports = { catagory, subCatagory, renderCatagory, renderSubCatagory, deleteCatagory, updateStatus };
+module.exports = { catagory, subCatagory, renderCatagory, renderSubCatagory, deleteCatagory, updateStatus, CatagoryById };

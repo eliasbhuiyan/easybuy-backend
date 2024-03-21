@@ -76,7 +76,7 @@ const getallproduct = async (req, res) => {
 // =============== ====================  ================
 const findOneProduct = async (req, res) => {
   const { id } = req.body
-  const product = await Product.findOne({ shortID: id }).populate("variant")
+  const product = await Product.findOne({ _id: id }).populate("variant")
     .populate("reviews")
     .populate({
       path: "reviews.userId",
@@ -135,14 +135,14 @@ const createVariant = async (req, res) => {
 // =============== Review Product Start ================
 // =============== ==================== ================
 const review = async (req, res) => {
-  const { email, rating, comment, shortID } = req.body;
+  const { email, rating, comment, id } = req.body;
   if (!email) {
     return res.status(400).send({ error: "Email is required!" });
   }
   if (!rating) {
     return res.status(400).send({ error: "Give your rating!" });
   }
-  if (!shortID) {
+  if (!id) {
     return res.status(400).send({ error: "Somthing is wrong!" });
   }
   try {
@@ -151,7 +151,7 @@ const review = async (req, res) => {
       return res.status(400).send({ error: "User not found!" });
 
     }
-    const product = await Product.findOne({ shortID });
+    const product = await Product.findOne({ _id: id });
     const review = {
       userId: user._id,
       rating,
@@ -160,15 +160,6 @@ const review = async (req, res) => {
     product.reviews.push(review);
     product.save();
     res.send({ message: "Review created!" });
-    // if (result) {
-    //   await Product.findOneAndUpdate(
-    //     { _id: variant.product },
-    //     { $push: { variant: variant._id } }
-    //   );
-    //   res.send({ message: "Variant created!" });
-    // } else {
-    //   return res.status(400).send({ error: "Something is wrong! Try again." });
-    // }
   } catch (error) {
     return res.status(400).send({ error: "Something is wrong! Try again." });
   }

@@ -49,15 +49,19 @@ const userScema = new Schema({
   },
   zipCode: {
     type: String,
+    default: null
   },
   city: {
     type: String,
+    default: null
   },
   country: {
     type: String,
+    default: null
   },
   state: {
     type: String,
+    default: null
   },
   totalOrder: {
     type: Number,

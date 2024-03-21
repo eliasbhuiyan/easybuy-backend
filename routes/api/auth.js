@@ -8,12 +8,13 @@ const {
 } = require("../../controllers/authControllers/merchant");
 const adminControl = require("../../middleware/adminControl");
 const adminMerchantControl = require("../../middleware/adminMerchantControl");
-const userList = require("../../controllers/authControllers/userList");
+const { userList, FindUser } = require("../../controllers/authControllers/userList");
 const router = express.Router();
 
 router.post("/registration", registration);
 router.post("/login", loginControllers);
 router.get("/userlist", adminMerchantControl, userList);
+router.post("/finduser", adminMerchantControl, FindUser);
 router.post("/forgotpassword", forgotPassword);
 router.post("/resetpassword", resetPassword);
 router.post("/otpmatch", otpMatch);

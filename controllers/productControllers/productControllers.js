@@ -101,17 +101,21 @@ const deleteProduct = async (req, res) => {
 // =============== Create Variant Start ================
 // =============== ==================== ================
 const createVariant = async (req, res) => {
-  const { color, price, quantity, size, storage, product } = req.body;
+  const { color, originalPrice, sellingPrice, quantity, size, storage, product } = req.body;
   if (!product) {
-    return res.status(400).send({ error: "Product ID is required!" });
+    return res.status(400).send({ error: "Select a product!" });
   }
+  if (!originalPrice || !sellingPrice) {
+    return res.status(400).send({ error: "Price is required!" });
+  }                           
   try {
     ImageUpload(req.file.path, async (error, result) => {
       if (result) {
         const variant = new Variant({
           color,
           image: result.url,
-          price,
+          originalPrice,
+          sellingPrice,
           quantity,
           size,
           storage,

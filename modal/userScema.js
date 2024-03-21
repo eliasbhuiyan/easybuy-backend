@@ -34,6 +34,7 @@ const userScema = new Schema({
   },
   update: {
     type: Date,
+    default: Date.now,
   },
   create: {
     type: Date,

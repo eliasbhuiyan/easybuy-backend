@@ -1,4 +1,5 @@
 const User = require("../../modal/userScema");
+const jwt = require("jsonwebtoken");
 const emailValidation = require("../../utilities/emailValidation");
 // =============== =============== ================
 // =============== User Lisr Start ================
@@ -59,22 +60,49 @@ const UpdateUser = async (req, res) => {
         } else if (!emailValidation(email)) {
             return res.status(400).send({ error: "Email is invalid!" });
         }
-        console.log(uid);
-        await User.findByIdAndUpdate({ uid }, {
+        const existingUser = await User.findOne({ _id: uid });
+
+        if(!existingUser){
+            return res.status(400).send({error: "Something went wrong!"})
+        }
+        const userObject = {
+            auth: existingUser._id,
+            name: existingUser.fullName,
+            role: existingUser.role,
+            email: existingUser.email,
+            phone: existingUser.phone,
+            address: existingUser.addressOne,
+            addressTwo: existingUser.addressTwo,
+            avatar: existingUser.avatar,
+            city: existingUser.city,
+            country: existingUser.country,
+            state: existingUser.state,
+            zipCode: existingUser.zipCode
+          }
+        const expiresIn = 10 * 24 * 60 * 60;
+        let token = jwt.sign(
+            userObject,
+            process.env.JWT_SEC,
+            { expiresIn }
+          );
+          await User.findOneAndUpdate({ _id: uid }, {
             $set: {
-                fullName,
-                phone,
-                email,
-                addressOne,
-                addressTwo,
-                zipCode,
-                city,
-                country,
-                state
+                "fullName": fullName,
+                "phone": phone,
+                "email": email,
+                "addressOne": addressOne,
+                "addressTwo": addressTwo,
+                "zipCode": zipCode,
+                "city": city,
+                "country": country,
+                "state": state,
+                "sec_token": token,
+                "update": Date.now()
             }
         }, { new: true })
-        // console.log('User Updated Successfully!');
-        return res.status(200).json({ message: 'User Updated Successfully!' })
+        return res.status(200).json({
+         message: 'User Updated Successfully!',
+        })
 
     } catch (err) {
         return res.status(500).json({ message: 'Internal Server Error!' })

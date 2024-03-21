@@ -31,9 +31,11 @@ const loginControllers = async (req, res) => {
                     avatar: existingUser.avatar,
                   }
                   //===== JWT ROLE TOKEN =====//
+                  const expiresIn = 10 * 24 * 60 * 60;
                   let token = jwt.sign(
                     userObject,
-                    process.env.JWT_SEC
+                    process.env.JWT_SEC,
+                    { expiresIn }
                   );
                   await User.findByIdAndUpdate(
                     existingUser._id,
@@ -42,10 +44,6 @@ const loginControllers = async (req, res) => {
                     },
                     { new: true }
                   );
-                  // res.cookie("sec_token", token,
-                  //   {
-                  //     httpOnly: true,
-                  //   });
                   return res.status(200).send({
                     message: "Login Successfull!",
                     sec_token: token,

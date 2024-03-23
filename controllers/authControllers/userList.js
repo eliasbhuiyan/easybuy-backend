@@ -1,7 +1,9 @@
 const User = require("../../modal/userScema");
 const jwt = require("jsonwebtoken");
 const emailValidation = require("../../utilities/emailValidation");
-const ImageUpload = require("../../utilities/cloudinary")
+const ImageUpload = require("../../utilities/cloudinary");
+const merchantSchema = require("../../modal/merchantSchema");
+const bcrypt = require("bcrypt");
 // =============== =============== ================
 // =============== User Lisr Start ================
 // =============== =============== ================
@@ -50,7 +52,7 @@ const FindUser = async (req, res) => {
 // =============== =============== ================
 
 const UpdateUser = async (req, res) => {
-    const { fullName, phone, email, addressOne, addressTwo, zipCode, city, country, state, uid } = req.body
+    const { fullName, phone, email, addressOne, addressTwo, zipCode, city, country, state, password, uid } = req.body
     try {
         if (!fullName) {
             return res.status(400).send({ error: "Name is required!" });
@@ -60,53 +62,66 @@ const UpdateUser = async (req, res) => {
             return res.status(400).send({ error: "Email is required!" });
         } else if (!emailValidation(email)) {
             return res.status(400).send({ error: "Email is invalid!" });
+        } else if (!password) {
+            return res.status(400).send({ error: "Password is required" });
         }
         const existingUser = await User.findOne({ _id: uid });
-        if(!existingUser){
-            return res.status(400).send({error: "Something went wrong!"})
+        if (!existingUser) {
+            return res.status(400).send({ error: "Something went wrong!" })
         }
-        ImageUpload(req.file.path, async (error, result) => {
-         const updatedUser = await User.findOneAndUpdate({ _id: uid }, {
-            $set: {
-                "avatar": result.url,
-                "fullName": fullName,
-                "phone": phone,
-                "email": email,
-                "addressOne": addressOne,
-                "addressTwo": addressTwo,
-                "zipCode": zipCode,
-                "city": city,
-                "country": country,
-                "state": state,
-                "update": Date.now()
+        bcrypt.compare(
+            password,
+            existingUser.password,
+            async function (err, result) {
+                if (result) {
+                    ImageUpload(req.file?.path, async (error, result) => {
+                        const updatedUser = await User.findOneAndUpdate({ _id: uid }, {
+                            $set: {
+                                "avatar": result.url,
+                                "fullName": fullName,
+                                "phone": phone,
+                                "email": email,
+                                "addressOne": addressOne,
+                                "addressTwo": addressTwo,
+                                "zipCode": zipCode,
+                                "city": city,
+                                "country": country,
+                                "state": state,
+                                "update": Date.now()
+                            }
+                        }, { new: true })
+                        const userObject = {
+                            auth: updatedUser._id,
+                            name: updatedUser.fullName,
+                            role: updatedUser.role,
+                            email: updatedUser.email,
+                            phone: updatedUser.phone,
+                            address: updatedUser.addressOne,
+                            addressTwo: updatedUser.addressTwo,
+                            avatar: updatedUser.avatar,
+                            city: updatedUser.city,
+                            country: updatedUser.country,
+                            state: updatedUser.state,
+                            zipCode: updatedUser.zipCode
+                        }
+                        const expiresIn = 10 * 24 * 60 * 60;
+                        let token = jwt.sign(
+                            userObject,
+                            process.env.JWT_SEC,
+                            { expiresIn }
+                        );
+                        return res.status(200).json({
+                            message: 'User Updated Successfully!',
+                            sec_token: token,
+                            userObject
+                        })
+                    })
+                } else {
+                    return res.status(400).send({ error: "Authorization Failed!" });
+                }
             }
-         }, { new: true })
-         const userObject = {
-            auth: updatedUser._id,
-            name: updatedUser.fullName,
-            role: updatedUser.role,
-            email: updatedUser.email,
-            phone: updatedUser.phone,
-            address: updatedUser.addressOne,
-            addressTwo: updatedUser.addressTwo,
-            avatar: updatedUser.avatar,
-            city: updatedUser.city,
-            country: updatedUser.country,
-            state: updatedUser.state,
-            zipCode: updatedUser.zipCode
-        }
-        const expiresIn = 10 * 24 * 60 * 60;
-        let token = jwt.sign(
-            userObject,
-            process.env.JWT_SEC,
-            { expiresIn }
-          );
-        return res.status(200).json({
-         message: 'User Updated Successfully!',
-         sec_token: token,
-         userObject
-        })
-        })
+        );
+
     } catch (err) {
         return res.status(400).send({ error: 'Internal Server Error!' })
     }

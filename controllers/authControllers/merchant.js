@@ -68,7 +68,23 @@ const becomeMerchant = async (req, res) => {
 // =============== Get all Merchant Start ================
 // =============== ==================== ================
 const allMerchant = async (req, res) => {
-  const merchant = await Merchant.find().populate("merchant");
+  const merchant = await Merchant.find().populate({
+    path: "merchant",
+    select: `fullName
+    phone
+    email
+    avatar
+    role
+    update
+    create
+    addressOne
+    addressTwo
+    zipCode
+    city
+    country
+    state
+    totalOrder`,
+  });
   res.send({ merchant });
 };
 // =============== ==================== ================

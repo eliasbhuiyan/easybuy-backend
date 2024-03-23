@@ -20,43 +20,43 @@ const loginControllers = async (req, res) => {
             existingUser.password,
             async function (err, result) {
               if (result) {
-                try {
-                  const userObject = {
-                    auth: existingUser._id,
-                    name: existingUser.fullName,
-                    role: existingUser.role,
-                    email: existingUser.email,
-                    phone: existingUser.phone,
-                    address: existingUser.addressOne,
-                    addressTwo: existingUser.addressTwo,
-                    avatar: existingUser.avatar,
-                    city: existingUser.city,
-                    country: existingUser.country,
-                    state: existingUser.state,
-                    zipCode: existingUser.zipCode
-                  }
-                  //===== JWT ROLE TOKEN =====//
-                  const expiresIn = 10 * 24 * 60 * 60;
-                  let token = jwt.sign(
-                    userObject,
-                    process.env.JWT_SEC,
-                    { expiresIn }
-                  );
-                  await User.findByIdAndUpdate(
-                    existingUser._id,
-                    {
-                      $set: { sec_token: token },
-                    },
-                    { new: true }
-                  );
-                  return res.status(200).send({
-                    message: "Login Successfull!",
-                    sec_token: token,
-                    userObject
-                  });
-                } catch (error) {
-                  return res.status(400).send({ error: "Internal Server Error!" });
-                }
+                // try {
+                //   const userObject = {
+                //     auth: existingUser._id,
+                //     name: existingUser.fullName,
+                //     role: existingUser.role,
+                //     email: existingUser.email,
+                //     phone: existingUser.phone,
+                //     address: existingUser.addressOne,
+                //     addressTwo: existingUser.addressTwo,
+                //     avatar: existingUser.avatar,
+                //     city: existingUser.city,
+                //     country: existingUser.country,
+                //     state: existingUser.state,
+                //     zipCode: existingUser.zipCode
+                //   }
+                //   //===== JWT ROLE TOKEN =====//
+                //   const expiresIn = 10 * 24 * 60 * 60;
+                //   let token = jwt.sign(
+                //     userObject,
+                //     process.env.JWT_SEC,
+                //     { expiresIn }
+                //   );
+                //   await User.findByIdAndUpdate(
+                //     existingUser._id,
+                //     {
+                //       $set: { sec_token: token },
+                //     },
+                //     { new: true }
+                //   );
+                //   return res.status(200).send({
+                //     message: "Login Successfull!",
+                //     sec_token: token,
+                //     userObject
+                //   });
+                // } catch (error) {
+                //   return res.status(400).send({ error: "Internal Server Error!" });
+                // }
               } else {
                 return res.status(400).send({ error: "Authorization Failed!" });
               }

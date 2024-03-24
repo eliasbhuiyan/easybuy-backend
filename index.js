@@ -14,7 +14,7 @@ app.use(cors({
     "http://localhost:5173",
   ],
   credentials: true
-}));  
+}));
 
 dbconfig();
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

@@ -8,15 +8,14 @@ routes = require("./routes");
 const app = express();
 app.use(express.json());
 app.use(cookieParser())
-app.use(cors(
-  {
-    origin: [
-      "https://easybuy-dashbord.netlify.app/",
-      "http://localhost:5173/",
-    ],
-    credentials: true
-  }
-));
+app.use(cors({
+  origin: [
+    "https://easybuy-dashbord.netlify.app",
+    "http://localhost:5173",
+  ],
+  credentials: true
+}));  
+
 dbconfig();
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(routes);

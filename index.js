@@ -11,7 +11,8 @@ app.use(cookieParser())
 app.use(cors(
   {
     origin: [
-      "https://easybuy-dashbord.netlify.app/",
+      "https://easybuy-dashbord.netlify.app",
+      "http://localhost:5173"
     ],
     credentials: true
   }

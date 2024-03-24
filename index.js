@@ -12,7 +12,7 @@ app.use(cors(
   {
     origin: [
       "https://easybuy-dashbord.netlify.app",
-      "http://localhost:5173"
+      "https://easybuy-dashbord.vercel.app"
     ],
     credentials: true
   }

@@ -75,7 +75,7 @@ const UpdateUser = async (req, res) => {
             async function (err, result) {
                 if (result) {
                     ImageUpload(req.file?.path, async (error, result) => {
-                        const updatedUser = await User.findOneAndUpdate({ _id: uid }, {
+                        const updatedUser = await User.findOneAndUpdate({ _id: existingUser._id }, {
                             $set: {
                                 "avatar": result.url,
                                 "fullName": fullName,

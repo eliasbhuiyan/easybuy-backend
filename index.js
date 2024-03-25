@@ -18,6 +18,13 @@ app.use(cors(
     credentials: true
   }
 ));
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+  // res.setHeader('Access-Control-Allow-Origin', 'https://easybuy-dashbord.vercel.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 dbconfig();
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(routes);

@@ -51,15 +51,11 @@ const FindUser = async (req, res) => {
 // =============== Update User Start ================
 // =============== =============== ================
 const UpdateUser = async (req, res) => {
-    const { fullName, phone, email, addressOne, addressTwo, zipCode, city, country, state, password, uid } = req.body
+    const { fullName, phone, addressOne, addressTwo, zipCode, city, country, state, password, uid } = req.body
     if (!fullName) {
         return res.status(400).send({ error: "Name is required!" });
     } else if (!addressOne) {
         return res.status(400).send({ error: "Address is required!" });
-    } else if (!email) {
-        return res.status(400).send({ error: "Email is required!" });
-    } else if (!emailValidation(email)) {
-        return res.status(400).send({ error: "Email is invalid!" });
     } else if (!password) {
         return res.status(400).send({ error: "Password is required" });
     }
@@ -79,7 +75,6 @@ const UpdateUser = async (req, res) => {
                                 "avatar": result.url,
                                 "fullName": fullName,
                                 "phone": phone,
-                                "email": email,
                                 "addressOne": addressOne,
                                 "addressTwo": addressTwo,
                                 "zipCode": zipCode,

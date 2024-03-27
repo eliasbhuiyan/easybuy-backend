@@ -18,7 +18,6 @@ app.use(cors(
     credentials: true
   }
 ));
-
 dbconfig();
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(routes);

@@ -50,7 +50,6 @@ const FindUser = async (req, res) => {
 // =============== =============== ================
 // =============== Update User Start ================
 // =============== =============== ================
-
 const UpdateUser = async (req, res) => {
     const { fullName, phone, email, addressOne, addressTwo, zipCode, city, country, state, password, uid } = req.body
     if (!fullName) {

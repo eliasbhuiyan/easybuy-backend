@@ -2,7 +2,9 @@ const Product = require("../../modal/productSchema");
 const Variant = require("../../modal/variantSchema");
 const SubCatagory = require("../../modal/subCatagory");
 const User = require("../../modal/userScema");
-const ImageUpload = require("../../utilities/cloudinary")
+const fs = require('fs');
+const { uploadImage, deleteImage } = require("../../utilities/cloudinary");
+const path = require('path');
 // =============== ==================== ================
 // =============== Create Product Start ================
 // =============== ==================== ================
@@ -21,9 +23,8 @@ const createProduct = async (req, res) => {
   } else if (!subCatagory) {
     return res.status(400).send({ error: "SubCatagory is required!" });
   }
-
   try {
-    ImageUpload(req.file.path, async (error, result) => {
+    uploadImage(req.file.path, 'easybuy/products', async (error, result) => {
       if (result) {
         const product = new Product({
           name,
@@ -96,7 +97,22 @@ const findOneProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   const { id } = req.body;
   try {
-    await Product.findOneAndDelete({ _id: id });
+    // Delete product
+    const existproduct = await Product.findOne({ _id: id });
+    if (existproduct) {
+      await Product.findOneAndDelete({ _id: existproduct._id });
+      if (existproduct.image) {
+        deleteImage("easybuy/products/", existproduct.image)
+      }
+    }
+    // Delete variants
+    if (existproduct.variant) {
+      const variantIds = existproduct.variant;
+      const variants = await Variant.deleteMany({ _id: { $in: variantIds } });
+      if (variants.image) {
+        deleteImage(variants.image)
+      }
+    }
     res.status(200).send({ message: "Product deleted!" });
   } catch (err) {
     res.status(500).send({ message: "Failed! Please try again." });
@@ -112,9 +128,9 @@ const createVariant = async (req, res) => {
   }
   if (!originalPrice || !sellingPrice) {
     return res.status(400).send({ error: "Price is required!" });
-  }                           
+  }
   try {
-    ImageUpload(req.file.path, async (error, result) => {
+    uploadImage(req.file.path, 'easybuy/products', async (error, result) => {
       if (result) {
         const variant = new Variant({
           color,

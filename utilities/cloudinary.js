@@ -5,8 +5,8 @@ cloudinary.v2.config({
     api_secret: process.env.CLOUD_API_SEC,
     secure: true,
 });
-const uploadImage = (imagePath, callback) => {
-    cloudinary.uploader.upload(imagePath, (result, error) => {
+const uploadImage = (imagePath, folderPath, callback) => {
+    cloudinary.v2.uploader.upload(imagePath, { folder: folderPath }, (error, result) => {
         if (error) {
             callback(error);
         } else {
@@ -14,5 +14,14 @@ const uploadImage = (imagePath, callback) => {
         }
     });
 };
-
-module.exports = uploadImage
+const deleteImage = (folderPath, imagePath) => {
+    try {
+        const parts = imagePath.split('/');
+        const filenameWithExtension = parts[parts.length - 1];
+        const filenameWithoutExtension = filenameWithExtension.split('.')[0];
+        cloudinary.uploader.destroy(`${folderPath}${filenameWithoutExtension}`);
+    } catch (error) {
+        console.error('Error while deleting image:', error);
+    }
+};
+module.exports = { uploadImage, deleteImage }

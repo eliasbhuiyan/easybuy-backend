@@ -74,7 +74,7 @@ const approvedProduct = async (req, res) => {
 // =============== Get All Product Start ================
 // =============== ====================  ================
 const getallproduct = async (req, res) => {
-  const product = await Product.find().populate("subCatagory");
+  const product = await Product.find().populate("subCatagory").populate("variant");
   res.send({ product });
 };
 // =============== ====================  ================

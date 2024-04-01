@@ -12,6 +12,8 @@ const {
 } = require("../../controllers/productControllers/productControllers");
 const adminMerchantControl = require("../../middleware/adminMerchantControl");
 const adminControl = require("../../middleware/adminControl");
+const publicRoute = require("../../middleware/PublicRouteAccess");
+const userControl = require("../../middleware/userControl");
 
 
 router.post("/createproduct", adminMerchantControl, upload.single("image"), createProduct);
@@ -27,10 +29,10 @@ router.post(
   approvedProduct
 );
 
-router.get("/getallproduct", getallproduct);
-router.post("/findoneproduct", findOneProduct);
+router.get("/getallproduct", publicRoute, getallproduct); // for public
+router.post("/findoneproduct", publicRoute, findOneProduct); // for public
 
 router.post("/deleteproduct", adminControl, deleteProduct);
-router.post("/review", review);
+router.post("/review", userControl, review);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const User = require("../modal/userScema");
 // ======= ============================ ================
 // ======= Secured Admin Merchant Start ================
@@ -22,10 +23,10 @@ async function userControl(req, res, next) {
                 return res.status(400).send({ error: "Authorization Failed!" });
             }
         } else {
-            return res.status(400).send({ error: "Not Found Data!" });
+            return res.status(400).send({ error: "Please Login First!" });
         }
     } catch {
-        return res.status(400).send({ error: "Not Found Data!" });
+        return res.status(400).send({ error: "Please Login First!" });
     }
 }
 

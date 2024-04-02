@@ -64,10 +64,14 @@ const userScema = new Schema({
     type: String,
     default: null
   },
-  totalOrder: {
-    type: Number,
-    default: 0,
-  },
+  cartList: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Product',
+  }],
+  order: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Order',
+  }],
   otp: {
     type: String,
   },

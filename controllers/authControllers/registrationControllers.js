@@ -15,8 +15,8 @@ const registration = async (req, res) => {
     addressTwo,
     zipCode,
     city,
-    division,
-    district,
+    country,
+    state
   } = req.body;
   if (!fullName) {
     return res.status(400).send({ error: "Name is required!" });
@@ -67,7 +67,33 @@ const registration = async (req, res) => {
         { $set: { otp: null } },
         { new: true }
       );
-    }, 180000);
+    }, 600000);
   });
 };
-module.exports = registration;
+
+const resendOtp = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findOne({ _id: userId });
+    if (user) {
+      if (user.emailVerified) {
+        return res.status(201).send({ info: "Email already verified! Please login." });
+      }
+      await User.findOneAndUpdate({ _id: userId }, { $set: { otp: token() } }, { new: true });
+      emailVerification(user.email, user.otp, verifyTemplete);
+      res.status(200).send({ message: "Otp Resend! Check your email" });
+      setTimeout(async () => {
+        await User.findOneAndUpdate(
+          { email: user.email },
+          { $set: { otp: null } },
+          { new: true }
+        );
+      }, 600000);
+    } else {
+      res.status(400).send({ error: "User not found!" });
+    }
+  } catch (error) {
+    res.status(400).send({ error: "Something went wrong!" });
+  }
+}
+module.exports = { registration, resendOtp };

@@ -17,7 +17,7 @@ const router = express.Router();
 router.post("/registration", publicRoute, registration);
 router.post("/login", publicRoute, loginControllers);
 router.get("/userlist", adminMerchantControl, userList);
-router.post("/finduser", adminMerchantControl, FindUser);
+router.post("/finduser", userControl, FindUser);
 router.post("/updateuser", upload.single("image"), userControl, UpdateUser);
 router.post("/forgotpassword", publicRoute, forgotPassword);
 router.post("/resetpassword", publicRoute, resetPassword);

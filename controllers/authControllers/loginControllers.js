@@ -1,11 +1,14 @@
 const User = require("../../modal/userScema");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const emailValidation = require("../../utilities/emailValidation");
 const loginControllers = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email) {
       return res.status(400).send({ error: "Email is required" });
+    } else if (!emailValidation(email)) {
+      return res.status(400).send({ error: "Email is invalid!" });
     } else if (!password) {
       return res.status(400).send({ error: "Password is required" });
     } else {

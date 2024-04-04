@@ -9,13 +9,12 @@ const {
   approvedProduct,
   findOneProduct,
   review,
-  addToCart,
-  showCart
 } = require("../../controllers/productControllers/productControllers");
 const adminMerchantControl = require("../../middleware/adminMerchantControl");
 const adminControl = require("../../middleware/adminControl");
 const publicRoute = require("../../middleware/PublicRouteAccess");
 const userControl = require("../../middleware/userControl");
+const { addToCart, showCart } = require("../../controllers/productControllers/cartController");
 
 
 router.post("/createproduct", adminMerchantControl, upload.single("image"), createProduct);

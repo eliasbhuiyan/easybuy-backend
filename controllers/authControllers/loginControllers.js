@@ -37,7 +37,6 @@ const loginControllers = async (req, res) => {
                     country: existingUser.country,
                     state: existingUser.state,
                     zipCode: existingUser.zipCode,
-                    cartList: existingUser.cartList,
                   }
                   //===== JWT ROLE TOKEN =====//
                   const expiresIn = 10 * 24 * 60 * 60;
@@ -56,7 +55,8 @@ const loginControllers = async (req, res) => {
                   return res.status(200).send({
                     message: "Login Successfull!",
                     sec_token: token,
-                    userObject
+                    userObject,
+                    cartList: existingUser?.cartList ? existingUser?.cartList : null,
                   });
                 } catch (error) {
                   return res.status(400).send({ error: "Internal Server Error!" });

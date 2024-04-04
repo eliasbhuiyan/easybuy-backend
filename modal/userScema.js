@@ -65,8 +65,16 @@ const userScema = new Schema({
     default: null
   },
   cartList: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Product',
+    product: {
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
+    },
+    variantId: {
+      type: String
+    },
+    quantity: {
+      type: Number
+    }
   }],
   order: [{
     type: Schema.Types.ObjectId,

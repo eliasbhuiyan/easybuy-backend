@@ -20,7 +20,7 @@ router.get("/userlist", adminMerchantControl, userList);
 router.post("/finduser", userControl, FindUser);
 router.post("/updateuser", upload.single("image"), userControl, UpdateUser);
 router.post("/forgotpassword", publicRoute, forgotPassword);
-router.post("/resetpassword", publicRoute, resetPassword);
+router.post("/resetpassword", resetPassword);
 router.post("/resendotp", publicRoute, resendOtp);
 router.post("/otpmatch", publicRoute, otpMatch);
 router.post("/merchant", publicRoute, becomeMerchant);

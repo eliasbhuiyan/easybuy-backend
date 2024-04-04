@@ -6,15 +6,25 @@ const forgotpassTempete = require("../../utilities/forgotpassTempete");
 
 const forgotPassword = async (req, res) => {
     const { email } = req.body;
+    if (!email) {
+        return res.status(400).send({ error: "Email is required!" });
+    }
     const existingUser = await User.find({ email });
     if (existingUser.length > 0) {
-        let token = jwt.sign({ email: email }, "eliasbhuiyan");
+        let token = jwt.sign({ email: email }, process.env.SWTSECRT);
         await User.findOneAndUpdate(
             { email },
             { $set: { forgotpassToken: token } },
             { new: true }
         );
         emailForgotPassword(email, token, forgotpassTempete);
+        setTimeout(async () => {
+            await User.findOneAndUpdate(
+                { email },
+                { $set: { forgotpassToken: null } },
+                { new: true }
+            );
+        }, 600000);
         return res
             .status(200)
             .send({ message: "Request sent successfully! Please check your email" });
@@ -43,7 +53,7 @@ const resetPassword = async (req, res) => {
         } else {
             bcrypt.hash(password, 10, async function (err, hash) {
                 await User.findByIdAndUpdate(user._id, {
-                    $set: { password: hash, otp: null },
+                    $set: { password: hash, forgotpassToken: null },
                 });
                 return res
                     .status(200)

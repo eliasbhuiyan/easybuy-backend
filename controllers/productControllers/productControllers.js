@@ -189,5 +189,28 @@ const review = async (req, res) => {
     return res.status(400).send({ error: "Something is wrong! Try again." });
   }
 };
+// =============== ==================== ================
+// =============== Review Product Start ================
+// =============== ==================== ================
 
-module.exports = { createProduct, createVariant, getallproduct, deleteProduct, approvedProduct, findOneProduct, review };
+const addToCart = async (req, res) => {
+  const { pId, userId, variantId, quantity } = req.body
+
+  try {
+    const user = await User.findOne({ _id: userId })
+    if (!user) {
+      return res.status(400).send({ error: "Something is wrong!" });
+    }
+    const productdata = {
+      product: pId,
+      variantId,
+      quantity: quantity
+    }
+    await User.findOneAndUpdate({ _id: user._id }, { $push: { cartList: productdata } })
+    return res.send({ message: "Product added to cart!" })
+  } catch (error) {
+    return res.status(400).send({ error: "Something is wrong! Try again." });
+  }
+}
+
+module.exports = { createProduct, createVariant, getallproduct, deleteProduct, approvedProduct, findOneProduct, review, addToCart };

@@ -8,7 +8,8 @@ const {
   deleteProduct,
   approvedProduct,
   findOneProduct,
-  review
+  review,
+  addToCart
 } = require("../../controllers/productControllers/productControllers");
 const adminMerchantControl = require("../../middleware/adminMerchantControl");
 const adminControl = require("../../middleware/adminControl");
@@ -29,10 +30,11 @@ router.post(
   approvedProduct
 );
 
-router.get("/getallproduct", publicRoute, getallproduct); // for public
-router.post("/findoneproduct", publicRoute, findOneProduct); // for public
+router.get("/getallproduct", publicRoute, getallproduct);
+router.post("/findoneproduct", publicRoute, findOneProduct);
 
 router.post("/deleteproduct", adminControl, deleteProduct);
 router.post("/review", userControl, review);
+router.post("/addtocart", userControl, addToCart);
 
 module.exports = router;

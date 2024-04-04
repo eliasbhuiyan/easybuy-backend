@@ -36,7 +36,8 @@ const loginControllers = async (req, res) => {
                     city: existingUser.city,
                     country: existingUser.country,
                     state: existingUser.state,
-                    zipCode: existingUser.zipCode
+                    zipCode: existingUser.zipCode,
+                    cartList: existingUser.cartList,
                   }
                   //===== JWT ROLE TOKEN =====//
                   const expiresIn = 10 * 24 * 60 * 60;

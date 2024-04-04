@@ -22,6 +22,7 @@ const userList = async (req, res) => {
     city
     country
     state
+    cartList
     totalOrder`,);
     res.send({ user });
 }
@@ -44,6 +45,7 @@ const FindUser = async (req, res) => {
     city
     country
     state
+    cartList
     `,);
     res.send({ user });
 }
@@ -101,7 +103,8 @@ const UpdateUser = async (req, res) => {
                             city: updatedUser.city,
                             country: updatedUser.country,
                             state: updatedUser.state,
-                            zipCode: updatedUser.zipCode
+                            zipCode: updatedUser.zipCode,
+                            cartList: existingUser.cartList,
                         }
                         const expiresIn = 10 * 24 * 60 * 60;
                         let token = jwt.sign(

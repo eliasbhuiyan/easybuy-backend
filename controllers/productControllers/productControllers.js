@@ -203,7 +203,11 @@ const addToCart = async (req, res) => {
     if (!user) {
       return res.status(400).send({ error: "Something is wrong!" });
     }
-
+    for(existProduct of user.cartList){
+      if(existProduct.product == productId){
+        return res.status(201).send({ info: "Product already in cart!" });
+      }
+    }
     const productdata = {
       product: productId,
       variant: variantId,

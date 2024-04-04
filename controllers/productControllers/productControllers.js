@@ -194,17 +194,20 @@ const review = async (req, res) => {
 // =============== ==================== ================
 
 const addToCart = async (req, res) => {
-  const { pId, userId, variantId, quantity } = req.body
-
+  const { productId, userId, variantId, quantity } = req.body
+  if (!productId || !userId || !variantId || !quantity) {
+    return res.status(400).send({ error: "What the hell!" });
+  }
   try {
     const user = await User.findOne({ _id: userId })
     if (!user) {
       return res.status(400).send({ error: "Something is wrong!" });
     }
+
     const productdata = {
-      product: pId,
-      variantId,
-      quantity: quantity
+      product: productId,
+      variant: variantId,
+      quantity
     }
     await User.findOneAndUpdate({ _id: user._id }, { $push: { cartList: productdata } })
     return res.send({ message: "Product added to cart!" })
@@ -213,4 +216,23 @@ const addToCart = async (req, res) => {
   }
 }
 
-module.exports = { createProduct, createVariant, getallproduct, deleteProduct, approvedProduct, findOneProduct, review, addToCart };
+const showCart = async (req, res) => {
+  const userId = req.headers.authorization.split("@")[1];
+  if (!userId) {
+    return res.status(400).send({ error: "What the hell!" });
+  }
+  try {
+    const user = await User.findOne({ _id: userId }).populate("cartList.product").populate("cartList.variant")
+    if (!user) {
+      return res.status(400).send({ error: "Something is wrong!" });
+    }
+    if (user.cartList.length == 0) {
+      return res.status(201).send({ message: "Your cart is empty!" })
+    }
+    return res.status(200).send(user.cartList)
+  } catch (error) {
+    return res.status(400).send({ error: "Something is wrong! Try again." });
+  }
+}
+
+module.exports = { createProduct, createVariant, getallproduct, deleteProduct, approvedProduct, findOneProduct, review, addToCart, showCart };

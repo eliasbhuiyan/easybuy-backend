@@ -69,8 +69,9 @@ const userScema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Product',
     },
-    variantId: {
-      type: String
+    variant: {
+      type: Schema.Types.ObjectId,
+      ref: 'Variant',
     },
     quantity: {
       type: Number

@@ -9,7 +9,8 @@ const {
   approvedProduct,
   findOneProduct,
   review,
-  addToCart
+  addToCart,
+  showCart
 } = require("../../controllers/productControllers/productControllers");
 const adminMerchantControl = require("../../middleware/adminMerchantControl");
 const adminControl = require("../../middleware/adminControl");
@@ -36,5 +37,6 @@ router.post("/findoneproduct", publicRoute, findOneProduct);
 router.post("/deleteproduct", adminControl, deleteProduct);
 router.post("/review", userControl, review);
 router.post("/addtocart", userControl, addToCart);
+router.get("/showcart", userControl, showCart);
 
 module.exports = router;

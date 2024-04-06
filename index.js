@@ -14,6 +14,7 @@ app.use(cors(
     origin: [
       "https://easybuy-dashbord.vercel.app",
       "http://localhost:5173",
+      "https://easybuy-one.vercel.app"
     ],
     credentials: true
   }

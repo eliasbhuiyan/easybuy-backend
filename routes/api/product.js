@@ -15,6 +15,7 @@ const adminControl = require("../../middleware/adminControl");
 const publicRoute = require("../../middleware/PublicRouteAccess");
 const userControl = require("../../middleware/userControl");
 const { addToCart, showCart } = require("../../controllers/productControllers/cartController");
+const { CreateOrder, checkout } = require("../../controllers/productControllers/OrderController");
 
 
 router.post("/createproduct", adminMerchantControl, upload.single("image"), createProduct);
@@ -37,5 +38,7 @@ router.post("/deleteproduct", adminControl, deleteProduct);
 router.post("/review", userControl, review);
 router.post("/addtocart", userControl, addToCart);
 router.get("/showcart", userControl, showCart);
+router.post("/createorder", userControl, CreateOrder);
+router.post("/create-checkout-session", userControl, checkout);
 
 module.exports = router;

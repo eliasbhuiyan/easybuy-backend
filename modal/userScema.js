@@ -81,6 +81,10 @@ const userScema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Order',
   }],
+  invoice: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Invoice',
+  }],
   otp: {
     type: String,
   },

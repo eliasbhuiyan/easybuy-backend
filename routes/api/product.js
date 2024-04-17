@@ -16,6 +16,7 @@ const publicRoute = require("../../middleware/PublicRouteAccess");
 const userControl = require("../../middleware/userControl");
 const { addToCart, showCart } = require("../../controllers/productControllers/cartController");
 const { CreateOrder, checkout } = require("../../controllers/productControllers/OrderController");
+const { createInvoice, invoiceList } = require("../../controllers/productControllers/invoiceController");
 
 
 router.post("/createproduct", adminMerchantControl, upload.single("image"), createProduct);
@@ -40,5 +41,7 @@ router.post("/addtocart", userControl, addToCart);
 router.get("/showcart", userControl, showCart);
 router.post("/createorder", userControl, CreateOrder);
 router.post("/create-checkout-session", userControl, checkout);
+router.post("/createinvoice", adminMerchantControl, createInvoice)
+router.get("/invoicelist", adminMerchantControl, invoiceList)
 
 module.exports = router;

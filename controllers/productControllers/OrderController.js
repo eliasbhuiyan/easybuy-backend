@@ -50,7 +50,6 @@ const checkout = async (req, res) => {
         success_url: `${process.env.FRONTEND}success`,
         cancel_url: `${process.env.FRONTEND}cancel`,
     });
-    console.log("session", session);
     return res.status(200).send({ id: session.id })
 }
 

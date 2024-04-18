@@ -1,5 +1,7 @@
 const invoiceSchema = require("../../modal/invoiceSchema");
-
+// =============== ==================== ================
+// =============== Create Invoice Start ================
+// =============== ==================== ================
 const createInvoice = async (req, res) => {
     const invoiceData = req.body
     const data = invoiceData.invoiceData
@@ -50,7 +52,9 @@ const createInvoice = async (req, res) => {
         return res.status(400).send({ error: "Something is wrond! Try again" });
     }
 }
-
+// =============== ==================== ================
+// ===============  Invoice List Start ================
+// =============== ==================== ================
 const invoiceList = async (req, res) => {
     try {
         const invoice = await invoiceSchema.find()
@@ -59,5 +63,17 @@ const invoiceList = async (req, res) => {
         return res.status(400).send({ error: "Something is wrond! Try again" });
     }
 }
+// =============== ==================== ================
+// ==============  Invoice Delete Start ================
+// =============== ==================== ================
+const invoiceDelete = async (req, res) => {
+    const { invoiceId } = req.body;
 
-module.exports = { createInvoice, invoiceList }
+    try {
+        await invoiceSchema.findOneAndDelete({ _id: invoiceId })
+        return res.status(200).send({ message: "Invoice Deleted Successfully" });
+    } catch (error) {
+        return res.status(400).send({ error: "Something is wrond! Try again" });
+    }
+}
+module.exports = { createInvoice, invoiceList, invoiceDelete }

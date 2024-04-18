@@ -47,10 +47,15 @@ const checkout = async (req, res) => {
             },
         ],
         mode: "payment",
-        success_url: `${process.env.FRONTEND}success`,
-        cancel_url: `${process.env.FRONTEND}cancel`,
+        success_url: `https://easybuy-one.vercel.app/success`,
+        cancel_url: `https://easybuy-one.vercel.app/cancel`,
     });
     return res.status(200).send({ id: session.id })
 }
 
-module.exports = { CreateOrder, checkout }
+const orderList = async (req, res) => {
+    const orderList = await Order.find({}).populate('user').populate('items.product').populate('items.variant')
+    return res.status(200).send(orderList)
+}
+
+module.exports = { CreateOrder, checkout, orderList }

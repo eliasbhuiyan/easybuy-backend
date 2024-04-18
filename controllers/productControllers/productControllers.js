@@ -34,7 +34,7 @@ const createProduct = async (req, res) => {
           image: result.url,
           imageAlt,
           slug,
-          subCatagory
+          subCatagory,
         });
         product.save();
         await SubCatagory.findOneAndUpdate(

@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const OrderSchema = new mongoose.Schema({
+    orderId: {
+        type: String,
+        default: function () {
+            return `${Math.floor(1000 + Math.random() * 9000)}`;
+        },
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

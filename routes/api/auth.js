@@ -6,7 +6,8 @@ const { forgotPassword, resetPassword } = require("../../controllers/authControl
 const {
   becomeMerchant, allMerchant, approvedMerchant, deleteMerchant
 } = require("../../controllers/authControllers/merchant");
-const upload = require("../../middleware/multer");
+const multer = require('multer')
+const upload = multer()
 const adminControl = require("../../middleware/adminControl");
 const adminMerchantControl = require("../../middleware/adminMerchantControl");
 const userControl = require("../../middleware/userControl");

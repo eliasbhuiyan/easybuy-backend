@@ -2,7 +2,6 @@ const Product = require("../../modal/productSchema");
 const Variant = require("../../modal/variantSchema");
 const SubCatagory = require("../../modal/subCatagory");
 const User = require("../../modal/userScema");
-const fs = require("fs");
 const { uploadImage, deleteImage } = require("../../utilities/cloudinary");
 // =============== ==================== ================
 // =============== Create Product Start ================
@@ -23,10 +22,7 @@ const createProduct = async (req, res) => {
     return res.status(400).send({ error: "SubCatagory is required!" });
   }
   try {
-    uploadImage(req.file.path, 'easybuy/products', async (error, result) => {
-      fs.unlink(req.file.path, (err) => {
-        console.log(err);
-      })
+    uploadImage(req.file.buffer,req.file.mimetype, 'easybuy/products', async (error, result) => {
       if (result) {
         const product = new Product({
           name,
@@ -132,7 +128,7 @@ const createVariant = async (req, res) => {
     return res.status(400).send({ error: "Price is required!" });
   }
   try {
-    uploadImage(req.file.path, 'easybuy/products', async (error, result) => {
+    uploadImage(req.file.buffer,req.file.mimetype, 'easybuy/products', async (error, result) => {
       if (result) {
         const variant = new Variant({
           color,

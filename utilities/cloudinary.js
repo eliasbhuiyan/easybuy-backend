@@ -5,8 +5,10 @@ cloudinary.v2.config({
     api_secret: process.env.CLOUD_API_SEC,
     secure: true,
 });
-const uploadImage = (imagePath, folderPath, callback) => {
-    cloudinary.v2.uploader.upload(imagePath, { folder: folderPath }, (error, result) => {
+const uploadImage = (imageBuffer,mimetype, folderPath, callback) => {
+    const base64EncodedData = Buffer.from(imageBuffer).toString('base64');
+    const dataURI = `data:${mimetype};base64,${base64EncodedData}`;
+    cloudinary.v2.uploader.upload(dataURI, { folder: folderPath }, (error, result) => {
         if (error) {
             callback(error);
         } else {

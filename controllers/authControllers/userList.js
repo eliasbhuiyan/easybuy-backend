@@ -69,7 +69,7 @@ const UpdateUser = async (req, res) => {
             existingUser.password,
             async function (err, result) {
                 if (result) {
-                    uploadImage(req.file?.path, "easybuy/users", async (error, result) => {
+                    uploadImage(req.file?.buffer,req.file?.mimetype, "easybuy/users", async (error, result) => {
                         if (result?.url) {
                             if (existingUser.avatar) {
                                 deleteImage("easybuy/users/", existingUser.avatar)
